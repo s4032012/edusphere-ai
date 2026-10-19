@@ -1,0 +1,23 @@
+{
+  "name": "edusphere-ai",
+  "version": "0.2.0",
+  "private": true,
+  "packageManager": "pnpm@10.18.3",
+  "scripts": {
+    "dev:admin": "pnpm --filter @edusphere/admin-web dev",
+    "dev:teacher-web": "pnpm --filter @edusphere/teacher-web dev",
+    "dev:platform": "pnpm --filter @edusphere/platform-console dev",
+    "dev:teacher": "pnpm --filter @edusphere/teacher-mobile start",
+    "dev:parent": "pnpm --filter @edusphere/parent-mobile start",
+    "dev:student": "pnpm --filter @edusphere/student-mobile start",
+    "typecheck": "turbo run typecheck",
+    "build:web": "turbo run build --filter=./apps/*-web --filter=@edusphere/platform-console",
+    "expo:doctor": "pnpm --filter @edusphere/teacher-mobile exec expo install --check && pnpm --filter @edusphere/parent-mobile exec expo install --check && pnpm --filter @edusphere/student-mobile exec expo install --check",
+    "test:contracts": "node --test packages/api-client/tests/*.test.mjs",
+    "build:mobile": "pnpm --filter \"./apps/*-mobile\" run build"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0",
+    "typescript": "~6.0.3"
+  }
+}

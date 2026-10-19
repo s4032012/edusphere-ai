@@ -1,0 +1,13 @@
+digraph Auth {
+ graph[rankdir=LR,bgcolor=white,pad=.25,ranksep=.55,nodesep=.4,fontname=Inter];node[shape=box,style="rounded,filled",fontname=Inter,fontsize=10,color="#C9D6E8",fillcolor="#F5F8FD",margin=".18,.15"];edge[color="#7185A3",penwidth=1.4,arrowsize=.6];
+ Login[label="Login to app\nusername + password",fillcolor="#E0EAFB"];
+ JWT[label="POST /auth/token/\n15-minute access JWT",fillcolor="#DFEBFB"];
+ Me[label="GET /me/\nvalid memberships",fillcolor="#DDEFE8"];
+ Allowed[label="App role allowed?",shape=diamond,fillcolor="#FAF2D9"];
+ Deny[label="No access\nrole mismatch",fillcolor="#FAE2E2"];
+ Select[label="Choose authorized school\ntenant_id",fillcolor="#E3F3F0"];
+ Data[label="GET /students/\nBearer + X-Tenant-ID",fillcolor="#EDF0FC"];
+ Scope[label="Backend membership,\nassignment, guardian verification",fillcolor="#EAF1FF"];
+ Result[label="Allowed records only",fillcolor="#D7F0DF"];
+ Login->JWT->Me->Allowed;Allowed->Deny[label="NO"];Allowed->Select[label="YES"];Select->Data->Scope->Result;
+}

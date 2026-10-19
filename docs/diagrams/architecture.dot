@@ -1,0 +1,13 @@
+digraph A {
+ graph [rankdir=TB,bgcolor="white",pad=0.24,nodesep=0.34,ranksep=0.64,fontname="Inter",splines=ortho];
+ node [shape=box,style="rounded,filled",fontname="Inter",fontsize=10,penwidth=1,color="#CDD8E8",fillcolor="#F7F9FE",fontcolor="#1B2A44",margin="0.17,0.12"];
+ edge [color="#7E90AE",arrowsize=0.65,penwidth=1.4];
+ subgraph cluster_web {label="WEB · React + TypeScript";fontsize=13;fontname="Inter";style="rounded,filled";fillcolor="#F3F6FF";color="#D3DFFC"; Admin[label="Admin Portal\nSchool Admin / Academic Affairs",fillcolor="#E2EAFE"]; TeacherWeb[label="Teacher Workspace\nTeachers / Homeroom",fillcolor="#DBF3F1"]; Platform[label="Platform Console\nUI shell only",fillcolor="#F1F1F4"]; {rank=same;Admin;TeacherWeb;Platform} }
+ subgraph cluster_mobile {label="MOBILE · React Native + Expo SDK 57";fontsize=13;fontname="Inter";style="rounded,filled";fillcolor="#F2FAF7";color="#D2E8DD"; TeacherMobile[label="EduSphere Teacher\niOS + Android",fillcolor="#D9F0F2"]; ParentMobile[label="EduSphere Parent\niOS + Android",fillcolor="#DDF4E9"]; StudentMobile[label="EduSphere Student\niOS + Android",fillcolor="#E9E2FF"]; {rank=same;TeacherMobile;ParentMobile;StudentMobile} }
+ Shared[label="Shared packages\napi-client · design-tokens",fillcolor="#F6F1E9"];
+ API[label="Django REST API\nJWT prototype + tenant-scoped services",fillcolor="#D9E6FA",fontsize=12];
+ POLICY[label="RBAC + ReBAC + effective dates\nmembership · teacher assignment · guardian link",fillcolor="#EFF5FF"];
+ DB[label="PostgreSQL\n2 synthetic tenants for isolation tests",fillcolor="#EAF4FF"];
+ Admin->Shared;TeacherWeb->Shared;TeacherMobile->Shared;ParentMobile->Shared;StudentMobile->Shared;
+ Platform->Shared[style=dashed];Shared->API;API->POLICY;POLICY->DB;
+}

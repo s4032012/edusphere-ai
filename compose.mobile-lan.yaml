@@ -1,0 +1,9 @@
+# OPTIONAL, DEVELOPMENT ONLY. Exposes HTTP API on LAN for testing a real phone.
+# Use a trusted private Wi-Fi, allowlist firewall, never use real student data.
+services:
+  backend:
+    ports: !override
+      - "127.0.0.1:8000:8000"
+      - "${DJANGO_BIND_IP:?Set DJANGO_BIND_IP to your Mac LAN IP}:8000:8000"
+    environment:
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}

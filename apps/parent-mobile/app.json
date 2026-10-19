@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "EduSphere Parent",
+    "slug": "edusphere-parent",
+    "scheme": "edusphere-parent",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.edusphere.demo.parent"
+    },
+    "android": {
+      "package": "com.edusphere.demo.parent"
+    },
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

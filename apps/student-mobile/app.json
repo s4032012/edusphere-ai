@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "EduSphere Student",
+    "slug": "edusphere-student",
+    "scheme": "edusphere-student",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.edusphere.demo.student"
+    },
+    "android": {
+      "package": "com.edusphere.demo.student"
+    },
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
