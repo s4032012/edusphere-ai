@@ -30,6 +30,7 @@ def visible_students(user, tenant, roles):
             kinds.append('SUBJECT')
         classrooms = TeacherAssignment.objects.filter(
             tenant=tenant, teacher=user, kind__in=kinds, is_active=True,
+            classroom__year__starts_on__lte=today, classroom__year__ends_on__gte=today,
             starts_on__lte=today
         ).filter(Q(ends_on__isnull=True) | Q(ends_on__gte=today)).values('classroom_id')
         student_ids = Enrollment.objects.filter(
@@ -62,6 +63,7 @@ def visible_classrooms(user, tenant, roles):
         kinds.append('SUBJECT')
     assigned = TeacherAssignment.objects.filter(
         tenant=tenant, teacher=user, kind__in=kinds, is_active=True,
+            classroom__year__starts_on__lte=today, classroom__year__ends_on__gte=today,
         starts_on__lte=today
     ).filter(Q(ends_on__isnull=True) | Q(ends_on__gte=today)).values('classroom_id')
     eligible |= Q(pk__in=assigned)
@@ -94,6 +96,7 @@ def student_profile_detail_level(user, tenant, roles, student):
         Q(ends_on__isnull=True) | Q(ends_on__gte=today))
     if 'HOMEROOM_TEACHER' in roles and TeacherAssignment.objects.filter(
         tenant=tenant, teacher=user, kind='HOMEROOM', is_active=True,
+        classroom__year__starts_on__lte=today, classroom__year__ends_on__gte=today,
         classroom_id__in=enrolled.values('classroom_id'), starts_on__lte=today
     ).filter(Q(ends_on__isnull=True) | Q(ends_on__gte=today)).exists():
         return 'full'

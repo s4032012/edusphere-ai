@@ -45,3 +45,18 @@ test('school change or logout invalidates in-flight responses',()=>{
   const scope=createRequestScope();const old=scope.capture();assert.equal(old(),true);
   scope.invalidate();assert.equal(old(),false);assert.equal(scope.capture()(),true);
 });
+test('administration writes preserve method, payload, token and tenant',async()=>{
+  const calls=[];globalThis.fetch=async(url,init)=>{calls.push({url,...init});return Response.json({id:'created'});};
+  const api=createApi('https://school.test/');
+  await api.adminPost('/api/v1/subjects/','token-a','tenant-a',{code:'MATH',name:'Toán'});
+  await api.adminPatch('/api/v1/students/id/edit/','token-b','tenant-b',{full_name:'Updated'});
+  assert.equal(calls[0].method,'POST');assert.equal(calls[1].method,'PATCH');
+  assert.equal(calls[0].headers['X-Tenant-ID'],'tenant-a');assert.equal(calls[1].headers['X-Tenant-ID'],'tenant-b');
+  assert.equal(calls[1].headers.Authorization,'Bearer token-b');
+  assert.deepEqual(JSON.parse(calls[0].body),{code:'MATH',name:'Toán'});
+  assert.deepEqual(JSON.parse(calls[1].body),{full_name:'Updated'});
+});
+test('validation errors show field details instead of generic HTTP code',async()=>{
+  globalThis.fetch=async()=>Response.json({code:['Mã đã tồn tại.']},{status:400});
+  await assert.rejects(createApi('').adminPost('/api/v1/subjects/','token','school',{}),e=>e.status===400&&e.message==='code: Mã đã tồn tại.');
+});

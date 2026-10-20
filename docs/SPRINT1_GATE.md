@@ -10,10 +10,10 @@ Trạng thái chi tiết và bằng chứng chạy lệnh: [VERIFY.md](VERIFY.md
 | G-04 Cross-tenant isolation | PASS cho API Sprint 0 | Duy trì regression cho API mới |
 | G-05 Assignment/guardian scope | PASS cho API Sprint 0 | UI/native smoke cần xác nhận |
 | G-06 Expiry/logout/SecureStore | IMPLEMENTED | Timer/401/in-flight guard có trong mã; cần kiểm tra SecureStore và background/resume trên thiết bị |
-| G-07 Migrations/schema/Postgres CI | PARTIAL | Migrations có và test Postgres pass; cần commit, Phase1 SQL nguồn và CI remote |
+| G-07 Migrations/schema/Postgres CI | PARTIAL | Migrations đã commit; Postgres CI main pass; còn Phase1 SQL nguồn |
 | G-08 Auth production decision | PENDING owner | Đề xuất trong SPRINT0_SCOPE.md cần chủ dự án phê duyệt |
 | G-09 UI/a11y review | PARTIAL | Người dùng xác nhận admin, GVCN, GVBM đăng nhập/xem roster trên web; mobile đã được người dùng báo hoạt động; còn visual/keyboard/screen-reader QA |
-| G-10 CI/branch protection | PARTIAL | Workflow frozen lockfile + Postgres có sẵn; cần remote repo và bật required checks |
+| G-10 CI/branch protection | PARTIAL | Private repo đã push, CI main pass; branch protection API 403 do gói tài khoản |
 
 ## Kịch bản QA thiết bị khi có runtime
 

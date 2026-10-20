@@ -1,4 +1,4 @@
-name: Sprint 0 CI
+name: EduSphere CI
 on: [push, pull_request]
 jobs:
   backend:
