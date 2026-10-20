@@ -106,6 +106,8 @@ class ClassroomListCreateView(TenantAPIView):
             raise ValidationError({'year': 'Năm học không thuộc trường này.'})
         if not 6 <= serializer.validated_data['grade_level'] <= 9:
             raise ValidationError({'grade_level': 'Pilot chỉ hỗ trợ lớp 6–9.'})
+        if Classroom.objects.filter(tenant=self.tenant, year=year, code=serializer.validated_data['code']).exists():
+            raise ValidationError({'code': 'Lớp đã tồn tại trong năm học.'})
         instance = serializer.save(tenant=self.tenant)
         self.audit(action='CLASSROOM_CREATED', instance=instance)
         return Response(ClassroomSerializer(instance).data, status=status.HTTP_201_CREATED)
@@ -126,6 +128,8 @@ class StudentListCreateView(TenantAPIView):
         self.require_school_admin()
         serializer = StudentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        if Student.objects.filter(tenant=self.tenant, student_code=serializer.validated_data['student_code']).exists():
+            raise ValidationError({'student_code': 'Mã học sinh đã tồn tại.'})
         instance = serializer.save(tenant=self.tenant)
         self.audit(action='STUDENT_CREATED', instance=instance)
         return Response(StudentSerializer(instance).data, status=status.HTTP_201_CREATED)
@@ -144,15 +148,17 @@ class EnrollmentCreateView(TenantAPIView):
     @transaction.atomic
     def post(self, request):
         self.require_school_admin()
-        student = get_object_or_404(Student.objects.select_for_update(), id=self.payload_id('student_id'), tenant=self.tenant)
-        classroom = get_object_or_404(Classroom, id=self.payload_id('classroom_id'), tenant=self.tenant)
+        student = get_object_or_404(Student.objects.select_for_update(), id=self.payload_id('student_id'), tenant=self.tenant, is_active=True)
+        classroom = get_object_or_404(Classroom.objects.select_for_update(), id=self.payload_id('classroom_id'), tenant=self.tenant)
         today = timezone.localdate()
+        if not classroom.year.starts_on <= today <= classroom.year.ends_on:
+            raise ValidationError({'classroom_id': 'Năm học của lớp chưa hoặc không còn hiệu lực.'})
         if Enrollment.objects.select_for_update().filter(
             tenant=self.tenant, student=student, is_active=True
         ).filter(Q(ends_on__isnull=True) | Q(ends_on__gte=today)).exists():
             raise ValidationError({'student_id':'Học sinh đã có lớp đang hiệu lực.'})
         enrollment = Enrollment.objects.create(tenant=self.tenant, student=student,
-                      classroom=classroom, starts_on=today)
+                      classroom=classroom, starts_on=today, ends_on=classroom.year.ends_on)
         self.audit(action='ENROLLMENT_CREATED', instance=enrollment)
         return Response({'id': enrollment.id}, status=201)
 
@@ -162,7 +168,7 @@ class TeacherAssignmentCreateView(TenantAPIView):
     def post(self, request):
         self.require_school_admin()
         teacher = get_object_or_404(Account, id=self.payload_id('teacher_id'), is_active=True)
-        classroom = get_object_or_404(Classroom, id=self.payload_id('classroom_id'), tenant=self.tenant)
+        classroom = get_object_or_404(Classroom.objects.select_for_update(), id=self.payload_id('classroom_id'), tenant=self.tenant)
         kind = request.data.get('kind')
         if kind not in {'HOMEROOM','SUBJECT'}:
             raise ValidationError({'kind': 'HOMEROOM hoặc SUBJECT.'})
@@ -175,9 +181,18 @@ class TeacherAssignmentCreateView(TenantAPIView):
         elif request.data.get('subject_id'):
             raise ValidationError({'subject_id':'GVCN không cần môn học.'})
         today = timezone.localdate()
+        if not classroom.year.starts_on <= today <= classroom.year.ends_on:
+            raise ValidationError({'classroom_id': 'Năm học của lớp chưa hoặc không còn hiệu lực.'})
+        existing = TeacherAssignment.objects.filter(
+            tenant=self.tenant, classroom=classroom, kind=kind, is_active=True
+        ).filter(Q(ends_on__isnull=True) | Q(ends_on__gte=today))
+        if kind == 'HOMEROOM' and existing.exists():
+            raise ValidationError({'classroom_id': 'Lớp đã có giáo viên chủ nhiệm đang hiệu lực.'})
+        if kind == 'SUBJECT' and existing.filter(subject=subject, teacher=teacher).exists():
+            raise ValidationError({'subject_id': 'Phân công bộ môn này đã tồn tại.'})
         assignment = TeacherAssignment.objects.create(
             tenant=self.tenant, teacher=teacher, classroom=classroom, subject=subject,
-            kind=kind, starts_on=today)
+            kind=kind, starts_on=today, ends_on=classroom.year.ends_on)
         self.audit(action='TEACHER_ASSIGNED', instance=assignment)
         return Response({'id': assignment.id, 'kind': assignment.kind}, status=201)
 
@@ -187,10 +202,12 @@ class GuardianLinkCreateView(TenantAPIView):
     def post(self, request):
         self.require_school_admin()
         guardian = get_object_or_404(Account, id=self.payload_id('guardian_id'), is_active=True)
-        student = get_object_or_404(Student, id=self.payload_id('student_id'), tenant=self.tenant)
+        student = get_object_or_404(Student.objects.select_for_update(), id=self.payload_id('student_id'), tenant=self.tenant, is_active=True)
         if 'PARENT' not in active_roles(guardian, self.tenant):
             raise ValidationError({'guardian_id':'Người giám hộ chưa có membership tại trường.'})
         relation = serializers.CharField(max_length=40).run_validation(request.data.get('relation', 'GUARDIAN'))
+        if GuardianLink.objects.filter(tenant=self.tenant, student=student, guardian=guardian, is_active=True).filter(Q(valid_to__isnull=True) | Q(valid_to__gte=timezone.localdate())).exists():
+            raise ValidationError({'guardian_id': 'Liên kết giám hộ đang hoạt động đã tồn tại.'})
         # No automatic verification from API payload. Human verification comes later.
         link = GuardianLink.objects.create(tenant=self.tenant, student=student,
             guardian=guardian, relation=relation,

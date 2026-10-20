@@ -1,6 +1,8 @@
-# EduSphere AI · Sprint 0 Technical Foundation v2.0
+# EduSphere AI · Sprint 1 — School Administration Core
 
-**Bản hoàn thiện kỹ thuật:** xem [kết quả kiểm chứng](docs/VERIFY.md), [phạm vi Sprint 0](docs/SPRINT0_SCOPE.md) và [API](docs/API.md).
+**Sprint 1 đã tích hợp:** Dashboard, năm học, môn học, nhân sự, lớp, học sinh, phân lớp/phân công, phụ huynh và audit trên Admin Web. Xem [phạm vi Sprint 1](docs/SPRINT1_IMPLEMENTATION.md) và [kiểm thử/nghiệm thu](docs/SPRINT1_TEST_PLAN.md). Tài khoản mới chưa có luồng kích hoạt; sửa/lưu trữ học sinh và sửa lớp hiện qua API.
+
+**Nền Sprint 0:** xem [kết quả kiểm chứng](docs/VERIFY.md), [phạm vi Sprint 0](docs/SPRINT0_SCOPE.md) và [API](docs/API.md).
 
 **Mục tiêu:** 1 trường THCS pilot (2 synthetic tenants để test). **Không dùng dữ liệu học sinh thật.**
 **Thiết kế:** 3 React Native + Expo apps **tách biệt**, 3 React Web apps, 1 Django REST backend, PostgreSQL.
@@ -68,7 +70,7 @@ apps/
   parent-mobile/          Expo Router [API live]
   student-mobile/         Expo Router [API live]
 packages/
-  api-client/             login / me / students / classrooms
+  api-client/             auth / roster / school administration
   design-tokens/          shared color/spacing values
 backend/                  Django API, migrations và regression tests
 ```

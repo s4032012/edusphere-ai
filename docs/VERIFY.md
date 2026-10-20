@@ -32,7 +32,7 @@ Người dùng tiếp tục xác nhận “work oke hết r” sau khi sửa k�
 - QA giao diện đầy đủ: đã có xác nhận luồng web ở trên; công cụ browser không có surface kết nối, thử native Chrome bị lỗi macOS ScreenCaptureKit `-3811` (capture failure). Đã rà source về labels, loading/error, focus outline và table overflow; chưa chứng nhận accessibility hay layout qua screenshot.
 - Kiểm tra mobile chi tiết: sai vai trò, phạm vi học sinh, SecureStore sau logout, expiry, background/resume, keyboard/screen reader; ghi thiết bị/OS và kết quả từng app. Phản hồi hoạt động chung chưa thay thế các ca kiểm thử này.
 - EAS APK/IPA, ký ứng dụng, App Store/Google Play: chưa có project/signing setup.
-- GitHub Actions remote và branch protection: repository Git local đã được khởi tạo riêng cho dự án. Workflow có sẵn; trạng thái remote/push và kết quả GitHub Actions cần xác nhận sau khi kết nối GitHub.
+- GitHub: private repository `s4032012/edusphere-ai`; main Sprint 0 CI [run 39194838288](https://github.com/s4032012/edusphere-ai/actions/runs/39194838288) thành công. Branch protection chưa bật: API trả 403 do gói tài khoản/repository private. Sprint 1 có kết quả riêng trong [SPRINT1_TEST_PLAN.md](SPRINT1_TEST_PLAN.md).
 - Đối chiếu Phase1 SQL: file SQL không có trong folder. Đã đối chiếu ORM với các entity nền của report, ghi phần còn thiếu trong SPRINT0_SCOPE.md.
 - Chủ dự án phê duyệt auth production; trường phê duyệt pilot, nghiệp vụ và dữ liệu thật.
 

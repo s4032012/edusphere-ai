@@ -1,0 +1,17 @@
+digraph G{
+ graph [rankdir=TB,bgcolor="white",pad="0.3",nodesep="0.32",ranksep="0.55"];
+ node [shape=box,style="filled,rounded",fontname="DejaVu Sans",fontsize=11,color="#CBD9F0",fillcolor="#F3F6FC",fontcolor="#142844",margin="0.16,0.11"];
+ edge [color="#6F87B4",arrowsize=0.7];
+ auth [label="Tenant / Login / Role\nSprint 0",fillcolor="#DFEBFF"];
+ year [label="Academic Year"];
+ subject [label="Subjects"];
+ staff [label="Staff & Membership"];
+ cl [label="Classrooms"];
+ students [label="Student Profiles"];
+ enroll [label="Enrollment\n(student + class)"];
+ assign [label="Teacher Assignment\n(teacher + class + subject)"];
+ guardian [label="Guardian Link\n(parent + student + verification)"];
+ audit [label="Audit Trail",fillcolor="#FFF2DC"];
+ auth->{year subject staff students};year->cl;cl->{enroll assign};students->{enroll guardian};staff->assign;subject->assign;
+ enroll->audit [style=dashed];assign->audit [style=dashed];guardian->audit [style=dashed];
+}

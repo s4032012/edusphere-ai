@@ -1,4 +1,4 @@
-# API Sprint 0
+# API Sprint 0 + Sprint 1
 
 Base URL local: `http://127.0.0.1:8000`. Các endpoint có dấu `/` cuối. Ngoại trừ health và login, mọi endpoint cần `Authorization: Bearer <access>`. API theo trường cần thêm `X-Tenant-ID: <uuid>` lấy từ `/me/`.
 
@@ -19,4 +19,28 @@ Base URL local: `http://127.0.0.1:8000`. Các endpoint có dấu `/` cuối. Ngo
 
 401: thiếu/sai/hết hạn token. 400: thiếu tenant, payload sai, dữ liệu trùng. 403: thiếu quyền thao tác. 404: tenant sai/không có membership hoặc object ngoài phạm vi. 429: quá giới hạn anonymous requests. Tránh phụ thuộc nội dung message để xác định trạng thái; dùng HTTP code.
 
-Roster tối đa 200 là giới hạn prototype, chưa đủ cho vận hành cả trường. Pagination/search/export và UI ghi dữ liệu thuộc Sprint 1. `date_of_birth` nullable và bị bỏ khỏi response cho giáo viên bộ môn; không giả định mọi role có cùng projection.
+Roster tối đa 200 là giới hạn prototype, chưa đủ cho vận hành cả trường. UI quản trị đã có trong Sprint 1; pagination/search phía server và export còn hoãn. `date_of_birth` nullable và bị bỏ khỏi response cho giáo viên bộ môn; không giả định mọi role có cùng projection.
+
+
+## Sprint 1 administrative endpoints
+
+All paths below start with `/api/v1/` and require token + tenant. All writes require `SCHOOL_ADMIN`. History, dashboard, guardian accounts and audit reads also require `SCHOOL_ADMIN`. Year/subject reads allow staff roles; staff reads allow admin, principal, vice-principal, academic affairs and department head.
+
+| Method/path | Payload / behavior |
+| --- | --- |
+| GET `admin/dashboard/` | Counts scoped to tenant; active relationships respect school-year dates |
+| GET/POST `academic-years/` | label, starts_on, ends_on; start < end; list cap 100 |
+| GET/POST `subjects/` | code, name; list cap 200 |
+| GET/POST `staff/` | username, display_name, role, optional email; list cap 300; unusable password on creation |
+| PATCH `classrooms/{id}/` | code, grade_level, year; year cannot change once relationship history exists |
+| PATCH `students/{id}/edit/` | student_code, full_name, date_of_birth |
+| POST `students/{id}/archive/` | Empty body; requires no active enrollment flag; soft archive |
+| GET `enrollments/list/` | Admin history, cap 500 |
+| POST `enrollments/{id}/end/` | Empty body; immediate end + audit |
+| GET `teacher-assignments/list/` | Admin history, cap 500 |
+| POST `teacher-assignments/{id}/end/` | Empty body; immediate access revocation + audit |
+| GET/POST `guardian-accounts/` | username, display_name; unusable password; list cap 300 |
+| GET `guardian-links/list/` | Admin history, cap 300 |
+| GET `audit-events/` | Latest 100 events, tenant-scoped |
+
+New enrollments/assignments require a currently effective school year and get `ends_on` equal to year end. Concurrent enrollment and homeroom creation are serialized with PostgreSQL row locks. `is_active` on history rows denotes explicit closure, not a computed date-based permission; date scope is additionally enforced by authorization. New staff/guardian accounts report `invitation_status: NOT_SENT`; no invitation is actually sent. Duplicate username returns a generic unavailable error.

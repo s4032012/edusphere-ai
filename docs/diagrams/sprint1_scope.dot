@@ -1,0 +1,17 @@
+digraph G {
+  graph [rankdir=LR,bgcolor="white",pad="0.35",nodesep="0.45",ranksep="0.75",fontname="DejaVu Sans"];
+  node [shape=box,style="rounded,filled",fontname="DejaVu Sans",fontsize=11,fillcolor="#F0F4FB",color="#C9D8F1",fontcolor="#192E4C",margin="0.2,0.14"];
+  edge [color="#6884BD",arrowsize=0.75];
+  admin [label="School Admin\nReact Web",fillcolor="#DDE7FF"];
+  teacher [label="Teacher Web / Mobile\nexisting Sprint 0"];
+  parent [label="Parent / Student Apps\nexisting Sprint 0"];
+  api [label="Django REST API\nTenant-scoped permissions",fillcolor="#D6F5ED"];
+  years [label="Academic Years\n& Subjects"];
+  roster [label="Students\n& Classrooms"];
+  staff [label="Staff Accounts\n& Memberships"];
+  relate [label="Enrollments\nTeacher Assignments\nGuardian Links"];
+  audit [label="Audit Events",fillcolor="#FFF0D7"];
+  db [label="PostgreSQL\nper-tenant filters",fillcolor="#E1E9F7"];
+  admin->api; teacher->api [style=dashed]; parent->api [style=dashed];
+  api->{years roster staff relate audit}; years->db; roster->db; staff->db; relate->db; audit->db;
+}
