@@ -1,0 +1,7 @@
+digraph G {
+ graph [rankdir=LR,bgcolor="white",pad="0.25",fontname="DejaVu Sans",label="STATE MACHINES · NO SILENT REWRITES",labelloc=t,fontsize=17,nodesep="0.45",ranksep="0.7"];
+ node [shape=box,style="rounded,filled",fontname="DejaVu Sans",fontsize=11,fillcolor="#EAF1FA",color="#5C7193"];
+ edge [fontname="DejaVu Sans",fontsize=10,arrowsize="0.7",color="#6C7C91"];
+ subgraph cluster_roll { label="ATTENDANCE"; color="#A5D9D4"; a [label="DRAFT"];b [label="SUBMITTED"];c [label="LOCKED"]; a->b[label="all marked"];b->c[label="admin"]; }
+ subgraph cluster_leave { label="LEAVE REQUEST"; color="#D6B0A0"; p [label="PENDING"];q [label="APPROVED"];r [label="REJECTED"];s [label="WITHDRAWN"];p->q[label="reviewer"];p->r[label="reviewer"];p->s[label="guardian"]; }
+}

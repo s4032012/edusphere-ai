@@ -1,0 +1,19 @@
+digraph G {
+  graph [bgcolor="white", pad="0.25", nodesep="0.35", ranksep="0.44", fontname="DejaVu Sans",label="LEAVE REQUEST · REVIEW & NOTIFICATION",labelloc="t",fontsize=17];
+  node [shape=box,style="rounded,filled",fontname="DejaVu Sans",fontsize=10,margin="0.16,0.1",fillcolor="#EFF4FA",color="#7890AB"];
+  edge [fontname="DejaVu Sans",fontsize=9,color="#55697D",arrowsize=0.65];
+  a [label="Phụ huynh gửi đơn\n(verified GuardianLink)",fillcolor="#DEF2E6"];
+  b [label="Kiểm tra tenant, quyền,\nkhoảng ngày & trùng đơn"];
+  c [shape=diamond,label="Hợp lệ?",fillcolor="#FFF3D7"];
+  d [label="Tạo PENDING + Audit",fillcolor="#D9ECEB"];
+  e [label="GVCN hiện tại / giáo vụ\nxem & xử lý"];
+  f [shape=diamond,label="Quyết định?",fillcolor="#FFF3D7"];
+  g [label="APPROVED\nCancel queued false-alert",fillcolor="#DDF1DF"];
+  h [label="REJECTED",fillcolor="#FFE4E2"];
+  j [label="WITHDRAWN (chỉ khi PENDING)",fillcolor="#F2EBFF"];
+  i [label="Outbox: LEAVE_DECIDED\n+ Audit",fillcolor="#FFF2DE"];
+  k [label="400 / 403 / 404",fillcolor="#FFE8E8"];
+  a->b->c;c->d [label="Có"]; c->k [label="Không"];
+  d->e; e->f; f->g [label="Duyệt"]; f->h [label="Từ chối"]; d->j [style=dashed,label="Phụ huynh rút"];
+  g->i;h->i;
+}

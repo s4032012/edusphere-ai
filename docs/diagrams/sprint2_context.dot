@@ -1,0 +1,16 @@
+digraph G {
+  graph [rankdir=LR, bgcolor="white", pad="0.25", nodesep="0.50", ranksep="0.90", fontname="DejaVu Sans", label="SPRINT 2 · SCHOOL DAILY ATTENDANCE", labelloc="t", fontsize=18];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.10", penwidth=1.2];
+  edge [fontname="DejaVu Sans", fontsize=9, color="#61718A", arrowsize=0.7];
+  teacher [label="GVCN\nTeacher Mobile / Web",fillcolor="#DDF1F0",color="#167C80"];
+  parent [label="Phụ huynh\nParent Mobile",fillcolor="#E0F2E9",color="#148060"];
+  admin [label="Quản trị trường\nAdmin API",fillcolor="#E8EDFC",color="#526AB4"];
+  api [label="Django REST API\nTenant + Authorization",fillcolor="#F2F4FA",color="#657592"];
+  db [label="PostgreSQL\nAttendance / Leave",fillcolor="#FFF5E5",color="#B68C49"];
+  outbox [label="Notification Outbox\nQUEUED / CANCELED",fillcolor="#FFF3EB",color="#BE8556"];
+  teacher -> api [label="Điểm danh / duyệt đơn"];
+  parent -> api [label="Xin nghỉ / xem chuyên cần"];
+  admin -> api [label="Đọc / khóa"];
+  api -> db [label="Transactions + Audit"];
+  api -> outbox [label="Event intent"];
+}

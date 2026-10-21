@@ -1,0 +1,14 @@
+digraph G {
+  graph [rankdir=TB, bgcolor="white",pad="0.25",nodesep="0.35",ranksep="0.70",fontname="DejaVu Sans",label="SPRINT 2 · DATA MODEL (SIMPLIFIED)",labelloc=t,fontsize=16];
+  node [shape=record, style="rounded,filled", fillcolor="#F6F9FC", color="#72819A", fontname="DejaVu Sans", fontsize=9, margin="0.12,0.08"];
+  edge [fontname="DejaVu Sans",fontsize=9,color="#667895",arrowsize=0.6];
+  tenant [label="{TENANT | id PK | code}"];
+  cls [label="{CLASSROOM | id PK | tenant_id FK}"];
+  student [label="{STUDENT | id PK | tenant_id FK}"];
+  enroll [label="{ENROLLMENT | student_id FK | classroom_id FK | effective dates}"];
+  session [label="{ATTENDANCE_SESSION | id PK | classroom_id FK | attendance_date | state}",fillcolor="#DDF1F0"];
+  record [label="{ATTENDANCE_RECORD | id PK | session_id FK | student_id FK | mark | updated_by}",fillcolor="#DDF1F0"];
+  leave [label="{LEAVE_REQUEST | id PK | student_id FK | guardian_id FK | from_date / through_date | state / decision}",fillcolor="#E0F2E9"];
+  outbox [label="{NOTIFICATION_OUTBOX | id PK | recipient_id FK | subject_id | dedupe_key | state}",fillcolor="#FFF2E3"];
+  tenant -> cls;tenant -> student;cls -> enroll;student -> enroll;cls -> session;session -> record;student -> record;student -> leave;leave -> outbox [style=dashed,label="event"];
+}

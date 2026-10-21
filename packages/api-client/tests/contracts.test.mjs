@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import ts from 'typescript';
 const source=fs.readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const {outputText}=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}});
-const {createApi,ApiError,membershipsFor,ROLES,createRequestScope}=await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
+const {createApi,createAttendanceApi,ApiError,membershipsFor,ROLES,createRequestScope}=await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
 const originalFetch=globalThis.fetch;
 afterEach(()=>{globalThis.fetch=originalFetch;});
 test('login sends credentials in JSON and trims trailing slash',async()=>{
@@ -59,4 +59,32 @@ test('administration writes preserve method, payload, token and tenant',async()=
 test('validation errors show field details instead of generic HTTP code',async()=>{
   globalThis.fetch=async()=>Response.json({code:['Mã đã tồn tại.']},{status:400});
   await assert.rejects(createApi('').adminPost('/api/v1/subjects/','token','school',{}),e=>e.status===400&&e.message==='code: Mã đã tồn tại.');
+});
+
+
+test('attendance and leave workflow uses scoped JSON writes and encoded filters',async()=>{
+  const calls=[];
+  globalThis.fetch=async(url,init)=>{calls.push({url,...init});return Response.json({id:'session',state:'DRAFT'});};
+  const api=createAttendanceApi('https://school.test/');
+  await api.start('token','tenant','class','2026-10-21');
+  await api.save('token','tenant','session',[{student_id:'pupil',mark:'ABSENT'}]);
+  await api.submit('token','tenant','session');
+  await api.decide('token','tenant','leave','approve','Reviewed');
+  await api.withdraw('token','tenant','leave');
+  await api.leaves('token','tenant','a&b');
+  for(const call of calls){assert.equal(call.headers.Authorization,'Bearer token');assert.equal(call.headers['X-Tenant-ID'],'tenant');}
+  assert.equal(calls[1].method,'PUT');
+  assert.deepEqual(JSON.parse(calls[1].body),{records:[{student_id:'pupil',mark:'ABSENT'}]});
+  assert.equal(calls[2].url,'https://school.test/api/v1/attendance/sessions/session/submit/');
+  assert.deepEqual(JSON.parse(calls[3].body),{action:'approve',decision_note:'Reviewed'});
+  assert.equal(calls[4].method,'POST');
+  assert.equal(calls[5].url,'https://school.test/api/v1/leave-requests/?student_id=a%26b');
+});
+
+test('attendance errors preserve typed 401 and validation details',async()=>{
+  const api=createAttendanceApi('https://school.test');
+  globalThis.fetch=async()=>Response.json({detail:'Expired'},{status:401});
+  await assert.rejects(api.detail('token','tenant','session'),e=>e instanceof ApiError&&e.status===401);
+  globalThis.fetch=async()=>Response.json({records:['Incomplete roster']},{status:400});
+  await assert.rejects(api.submit('token','tenant','session'),e=>e instanceof ApiError&&e.message.includes('Incomplete roster'));
 });
