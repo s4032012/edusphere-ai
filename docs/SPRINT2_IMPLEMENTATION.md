@@ -77,7 +77,7 @@ Run: `bash scripts/verify_sprint2.sh`.
 
 ## Integration details and verification
 
-The original starter kit was selectively integrated into the verified Sprint 1 branch. Existing migrations, lockfile, session expiry handling, SecureStore and LAN configuration remain intact. `attendance/migrations/0001_initial.py` adds four tables; it was applied to the local PostgreSQL development database.
+The original starter kit was selectively integrated into the verified Sprint 1 branch. Existing migrations, session expiry handling, SecureStore and LAN configuration remain intact. Expo/Router were updated within SDK 57 to ~57.0.31/~57.0.29 (with the pnpm lockfile) after the remote compatibility check required these new patches. `attendance/migrations/0001_initial.py` adds four tables; it was applied to the local PostgreSQL development database.
 
 Sprint 2 write transactions lock the tenant row before individual session/leave rows. This serializes writes per school for the pilot and prevents submit/approval races from leaving a false queued absence. This is a deliberate throughput tradeoff; it is not a replacement for future worker delivery locking or database-wide tenant constraints.
 

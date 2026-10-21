@@ -33,3 +33,7 @@ Use only demo accounts and synthetic data:
 9. Logout, switch school, change class/day while requests are in flight; old rows must not populate the new context. Check expiry, errors/retry, keyboard, scrolling and small screens on iOS/Android.
 
 No actual push is expected. Notifications endpoint returns only queued intents still authorized for the recipient; canceled absence intents are hidden. Production school policy, calendar, corrections, consent/evidence and operational readiness remain separate gates.
+
+## CI compatibility follow-up (2026-10-22 local time)
+
+The first GitHub run passed backend, client tests, typechecks and web builds, but Expo's remote version check required newer SDK 57 patch releases. Updated Expo to ~57.0.31 and Router to ~57.0.29 for all three apps, including the frozen lockfile. This is a patch update, not an SDK migration.
