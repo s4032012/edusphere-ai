@@ -1,13 +1,15 @@
+import {GradeAdministration} from './GradeAdministration';
 import {useCallback,useEffect,useMemo,useState,useRef,type FormEvent,type ReactNode} from 'react';
 import {ApiError,createRequestScope,createApi,membershipsFor,type CurrentUser,type Student,type AcademicYear,type Classroom,
   type Subject,type Staff,type Enrollment,type Assignment,type SchoolDashboard,type AuditEvent} from '@edusphere/api-client';
 import './style.css';
 
 const api=createApi(import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000');
-type Page='overview'|'years'|'subjects'|'staff'|'classrooms'|'students'|'enrollments'|'assignments'|'guardians'|'audit';
+type Page='grades'|'overview'|'years'|'subjects'|'staff'|'classrooms'|'students'|'enrollments'|'assignments'|'guardians'|'audit';
 type FormValues=Record<string,string>;
 type Entry={id:string;label:string;subtitle?:string};
 const sections:{key:Page;label:string;icon:string}[]=[
+  {key:'grades',label:'Sổ điểm',icon:'▤'},
   {key:'overview',label:'Tổng quan',icon:'▦'},
   {key:'years',label:'Năm học',icon:'▤'},
   {key:'subjects',label:'Môn học',icon:'◇'},
@@ -229,10 +231,10 @@ export default function App(){
       <main className="content"><div className="page-header"><div><span className="caps">QUẢN TRỊ NHÀ TRƯỜNG</span><h1>{currentTitle}</h1>
       <p>{currentTenant?.tenant||''} · Quản lý dữ liệu có phân quyền</p></div><div className="header-actions">
       <button type="button" onClick={()=>void reload()} className="btn secondary" disabled={busy}>↻ Làm mới</button>
-      {!['overview','audit'].includes(page)&&<button type="button" className="btn primary" disabled={busy} onClick={()=>{setForm({});setShowForm(!showForm);}}>＋ Thêm mới</button>}</div></div>
+      {!['overview','audit','grades'].includes(page)&&<button type="button" className="btn primary" disabled={busy} onClick={()=>{setForm({});setShowForm(!showForm);}}>＋ Thêm mới</button>}</div></div>
       {busy&&<p role="status">Đang xử lý dữ liệu…</p>}
       {error&&<Notice kind="error" text={error}/>} {success&&<Notice kind="success" text={success}/>}
-      {page==='overview'?<><div className="stat-grid">{[
+      {page==='grades'?<GradeAdministration key={token+tenant} token={token} tenant={tenant} classrooms={classrooms} subjects={subjects} onExpired={()=>{logout();setError('Phiên đăng nhập hết hạn.');}}/>:page==='overview'?<><div className="stat-grid">{[
         ['Học sinh',dashboard?.students,'♧'],['Lớp học',dashboard?.classes,'▣'],
         ['Phân công giáo viên',dashboard?.active_assignments,'⌁'],['Năm học',dashboard?.academic_years,'▤'],
       ].map(([label,count,icon])=><article className="stat-card" key={String(label)}><span className="stat-icon">{icon}</span>

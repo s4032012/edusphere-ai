@@ -12,7 +12,7 @@ INSTALLED_APPS = [
     'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes',
     'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles',
     'rest_framework', 'rest_framework_simplejwt', 'corsheaders',
-    'apps.identity', 'apps.schools', 'apps.academics', 'apps.attendance',
+    'apps.identity', 'apps.schools', 'apps.academics', 'apps.attendance', 'apps.grades',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

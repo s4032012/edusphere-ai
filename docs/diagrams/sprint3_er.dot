@@ -1,0 +1,10 @@
+digraph G {graph [rankdir=TB,bgcolor="white",pad=.3,nodesep=.55,ranksep=.65];node [shape=record,style="rounded,filled",fontname="DejaVu Sans",fontsize=11,color="#A7B9CC",fillcolor="#F3F7FB"];edge [color="#67859A",arrowsize=.6];
+Tenant [label="{Tenant|id PK}"];
+Classroom [label="{Classroom|id PK|tenant FK|year FK}"];
+Subject [label="{Subject|id PK|tenant FK}"];
+Book [label="{GradeBook|id PK|tenant FK|classroom FK|subject FK|semester|mode|regular_required}",fillcolor="#DDEFFF"];
+Assessment [label="{Assessment|id PK|book FK|kind / slot|state}",fillcolor="#E0F2F1"];
+Entry [label="{GradeEntry|id PK|assessment FK|student FK|score / result|version}",fillcolor="#F3E9FA"];
+Revision [label="{GradeRevision|id PK|entry FK|old / proposed|reason|from_version|state}",fillcolor="#FFF1DD"];
+Tenant->Book;Classroom->Book;Subject->Book;Book->Assessment;Assessment->Entry;Entry->Revision;
+}

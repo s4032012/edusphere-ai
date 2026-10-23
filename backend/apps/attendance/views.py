@@ -344,6 +344,14 @@ class MyNotifications(TenantAPIView):
             elif event.event_type == 'LEAVE_DECIDED':
                 leave=LeaveRequest.objects.filter(tenant=self.tenant,id=event.subject_id,guardian=request.user).select_related('student').first()
                 student=leave.student if leave else None
+            elif event.event_type in ('GRADE_PUBLISHED','GRADE_CORRECTED'):
+                from apps.grades.models import GradeEntry, GradeRevision
+                if event.event_type=='GRADE_PUBLISHED':
+                    entries=GradeEntry.objects.filter(tenant=self.tenant,assessment_id=event.subject_id,assessment__state='PUBLISHED').select_related('student')
+                else:
+                    revision=GradeRevision.objects.filter(tenant=self.tenant,id=event.subject_id,state='APPROVED').first()
+                    entries=GradeEntry.objects.filter(tenant=self.tenant,id=revision.entry_id,assessment__state='PUBLISHED').select_related('student') if revision else []
+                student=next((entry.student for entry in entries if entry.student.is_active and has_guardian_link(request.user,self.tenant,entry.student)),None)
             else:
                 continue
             if student and student.is_active and has_guardian_link(request.user,self.tenant,student):

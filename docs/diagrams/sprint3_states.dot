@@ -1,0 +1,4 @@
+digraph G {graph [rankdir=TB,bgcolor="white",pad=.3,fontname="DejaVu Sans"];node [fontname="DejaVu Sans",style="rounded,filled",shape=box,fillcolor="#F1F5FA",color="#B9CBDC",fontsize=12];edge [fontname="DejaVu Sans",fontsize=10,color="#567E9C"];
+Draft [label="DRAFT\nGiáo viên nhập điểm",fillcolor="#FFF1D8"];Locked [label="LOCKED\nĐủ điểm, không sửa trực tiếp",fillcolor="#DFE9FF"];Published [label="PUBLISHED\nPhụ huynh/học sinh xem",fillcolor="#E4F5E8"];Request [label="Revision PENDING\nGiáo viên + lý do",fillcolor="#F8E4EB"];Approved [label="APPROVED / REJECTED\nGiáo vụ quyết định",fillcolor="#E9F0F7"];
+Draft->Locked [label="Teacher lock\nvalidate roster"]; Locked->Published [label="Admin publish"]; Locked->Request [label="propose"];Published->Request [label="propose"];Request->Approved [label="decision\nversion check"]; Approved->Published [style=dashed,label="current published value\nupdated if approved"];
+}

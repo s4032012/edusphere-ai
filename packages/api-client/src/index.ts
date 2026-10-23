@@ -99,3 +99,45 @@ export function createAttendanceApi(baseUrl:string) {
     notifications:(token:string,tenant:string)=>send<NotificationEntry[]>('/api/v1/notifications/',token,tenant),
   };
 }
+
+/** Sprint 3: Grade Management & Academic Assessment. API enforces school and assignment scopes. */
+export type GradeMode = 'SCORE'|'COMMENT';
+export type AssessmentState = 'DRAFT'|'LOCKED'|'PUBLISHED';
+export type AssessmentKind = 'TX'|'GK'|'CK';
+export type GradeBook = {id:string;classroom_id:string;classroom_code:string;subject_id:string;subject_name:string;
+  semester:'1'|'2';mode:GradeMode;regular_required:number};
+export type GradeEntry = {id:string|null;student_id:string;student_code:string;full_name:string;
+  score:string|null;result:string;version:number};
+export type Assessment = {id:string;book_id:string;kind:AssessmentKind;slot:number;title:string;
+  state:AssessmentState;entries?:GradeEntry[]};
+export type GradeBookDetail = GradeBook & {can_edit:boolean;assessments:Assessment[]};
+export type StudentGrades = {student_id:string;student_name:string;books:(GradeBook & {
+  assessments:{kind:AssessmentKind;slot:number;title:string;score:string|null;result:string}[];
+  semester_average:string|null;semester_result:string|null})[]};
+export type GradeRevision = {id:string;entry_id:string;state:'PENDING'|'APPROVED'|'REJECTED';reason:string;
+  from_version:number;student_name:string;classroom_code:string;subject_name:string;assessment_title:string;old_result:string;decision_note:string;old_score:string|null;proposed_score:string|null;proposed_result:string};
+export function createGradesApi(baseUrl:string){
+  const base=trimBase(baseUrl);
+  const call=<T,>(path:string,token:string,tenant:string,method:'GET'|'POST'|'PUT'='GET',payload?:unknown):Promise<T>=>
+    jsonFetch<T>(`${base}${path}`,{method,headers:{'Authorization':`Bearer ${token}`,'X-Tenant-ID':tenant,
+      ...(payload===undefined?{}:{'Content-Type':'application/json'})},
+      ...(payload===undefined?{}:{body:JSON.stringify(payload)})});
+  return {
+    books:(token:string,tenant:string)=>call<GradeBook[]>('/api/v1/gradebooks/',token,tenant),
+    createBook:(token:string,tenant:string,payload:{classroom_id:string;subject_id:string;semester:'1'|'2';mode:GradeMode;regular_required:number})=>
+      call<GradeBook>('/api/v1/gradebooks/',token,tenant,'POST',payload),
+    book:(token:string,tenant:string,id:string)=>call<GradeBookDetail>(`/api/v1/gradebooks/${id}/`,token,tenant),
+    createAssessment:(token:string,tenant:string,id:string,kind:AssessmentKind,slot:number,title:string)=>
+      call<Assessment>(`/api/v1/gradebooks/${id}/assessments/`,token,tenant,'POST',{kind,slot,title}),
+    saveGrades:(token:string,tenant:string,id:string,entries:{student_id:string;score?:string;result?:string}[])=>
+      call<{updated:number;state:AssessmentState}>(`/api/v1/assessments/${id}/entries/`,token,tenant,'PUT',{entries}),
+    lock:(token:string,tenant:string,id:string)=>call<Assessment>(`/api/v1/assessments/${id}/lock/`,token,tenant,'POST',{}),
+    publish:(token:string,tenant:string,id:string)=>call<Assessment>(`/api/v1/assessments/${id}/publish/`,token,tenant,'POST',{}),
+    student:(token:string,tenant:string,id:string)=>call<StudentGrades>(`/api/v1/students/${id}/grades/`,token,tenant),
+    revisions:(token:string,tenant:string)=>call<GradeRevision[]>('/api/v1/grade-revisions/',token,tenant),
+    requestRevision:(token:string,tenant:string,id:string,proposed:{score?:string;result?:string;reason:string})=>
+      call<{id:string;state:string}>(`/api/v1/grade-entries/${id}/revision-requests/`,token,tenant,'POST',proposed),
+    decideRevision:(token:string,tenant:string,id:string,action:'approve'|'reject',decision_note='')=>
+      call<{id:string;state:string;entry_version:number}>(`/api/v1/grade-revisions/${id}/decision/`,token,tenant,'POST',{action,decision_note}),
+  };
+}

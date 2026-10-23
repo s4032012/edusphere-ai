@@ -1,0 +1,9 @@
+digraph G {graph [rankdir=LR,bgcolor="white",pad=.35,nodesep=.5,ranksep=.7,fontname="DejaVu Sans"];node [fontname="DejaVu Sans",shape=box,style="rounded,filled",color="#CCD6E4",fillcolor="#F4F7FB",fontsize=12];edge [color="#8090A5",arrowsize=.65];
+Admin [label="Admin Web\nGrade configuration\nPublish · Revisions",fillcolor="#E1F2F5"];
+Teacher [label="Teacher Web / Mobile\nCreate · Enter · Lock",fillcolor="#E1F2F5"];
+Parent [label="Parent / Student\nPublished-only Grades",fillcolor="#EFF4FD"];
+API [label="Django REST API\nTenant + RBAC / ReBAC",fillcolor="#DAE9FF"];
+Logic [label="Grade Domain Service\nState machine · Rules\nAtomic revision approval",fillcolor="#EAF6E9"];
+Data [label="PostgreSQL\nBooks, Assessments, Entries\nRevisions, Audit, Outbox",fillcolor="#F1EAFB"];
+Admin->API;Teacher->API;Parent->API;API->Logic;Logic->Data;
+}

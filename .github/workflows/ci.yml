@@ -31,7 +31,7 @@ jobs:
       - run: python manage.py check
       - run: python manage.py makemigrations --check --dry-run
       - run: python manage.py migrate --noinput
-      - run: python manage.py test apps.academics.tests apps.access.tests apps.attendance.tests
+      - run: python manage.py test apps.academics.tests apps.access.tests apps.attendance.tests apps.grades.tests
       - run: python manage.py seed_demo
       - run: python manage.py seed_demo
   javascript:
