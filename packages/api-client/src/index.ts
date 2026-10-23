@@ -68,3 +68,34 @@ export function createRequestScope() {
     capture: () => { const current = revision; return () => current === revision; },
   };
 }
+
+/** Sprint 2 domain contracts. Backend alone determines authorization. */
+export type AttendanceMark = 'PRESENT'|'ABSENT'|'LATE';
+export type AttendanceState = 'DRAFT'|'SUBMITTED'|'LOCKED';
+export type AttendanceSessionSummary = {id:string; classroom_id:string; classroom_code:string; attendance_date:string; state:AttendanceState};
+export type AttendanceRosterRow = {id:string;student_code:string;full_name:string;mark:AttendanceMark|null;note:string;effective_status:AttendanceMark|'EXCUSED_ABSENCE'|null};
+export type AttendanceSessionDetail = {id:string;classroom_id:string;attendance_date:string;state:AttendanceState;roster:AttendanceRosterRow[]};
+export type LeaveState = 'PENDING'|'APPROVED'|'REJECTED'|'WITHDRAWN';
+export type LeaveRequest = {id:string;student_id:string;student_name?:string;from_date:string;through_date:string;reason:string;state:LeaveState;decision_note:string;created_at:string};
+export type AttendanceHistory = {date:string;mark:AttendanceMark;effective_status:AttendanceMark|'EXCUSED_ABSENCE'};
+export type NotificationEntry = {id:string;type:string;payload:Record<string,unknown>;state:string;created_at:string};
+export function createAttendanceApi(baseUrl:string) {
+  const base=baseUrl.replace(/\/+$/,'');
+  const send=<T,>(path:string,token:string,tenantId:string,method:'GET'|'POST'|'PUT'='GET',body?:unknown):Promise<T> =>
+    jsonFetch<T>(`${base}${path}`,{method,headers:{'Authorization':`Bearer ${token}`,'X-Tenant-ID':tenantId,
+      ...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})});
+  return {
+    sessions:(token:string,tenant:string,date?:string)=>send<AttendanceSessionSummary[]>(`/api/v1/attendance/sessions/${date?`?date=${encodeURIComponent(date)}`:''}`,token,tenant),
+    start:(token:string,tenant:string,classroom_id:string,attendance_date:string)=>send<{id:string;state:AttendanceState;created:boolean}>('/api/v1/attendance/sessions/',token,tenant,'POST',{classroom_id,attendance_date}),
+    detail:(token:string,tenant:string,id:string)=>send<AttendanceSessionDetail>(`/api/v1/attendance/sessions/${id}/`,token,tenant),
+    save:(token:string,tenant:string,id:string,records:{student_id:string;mark:AttendanceMark;note?:string}[])=>send<{updated:number;state:AttendanceState}>(`/api/v1/attendance/sessions/${id}/records/`,token,tenant,'PUT',{records}),
+    submit:(token:string,tenant:string,id:string)=>send<{id:string;state:AttendanceState}>(`/api/v1/attendance/sessions/${id}/submit/`,token,tenant,'POST',{}),
+    lock:(token:string,tenant:string,id:string)=>send<{id:string;state:AttendanceState}>(`/api/v1/attendance/sessions/${id}/lock/`,token,tenant,'POST',{}),
+    studentAttendance:(token:string,tenant:string,id:string)=>send<AttendanceHistory[]>(`/api/v1/attendance/students/${id}/`,token,tenant),
+    leaves:(token:string,tenant:string,studentId?:string)=>send<LeaveRequest[]>(`/api/v1/leave-requests/${studentId?`?student_id=${encodeURIComponent(studentId)}`:''}`,token,tenant),
+    requestLeave:(token:string,tenant:string,student_id:string,from_date:string,through_date:string,reason:string)=>send<LeaveRequest>('/api/v1/leave-requests/',token,tenant,'POST',{student_id,from_date,through_date,reason}),
+    decide:(token:string,tenant:string,id:string,action:'approve'|'reject',decision_note='')=>send<LeaveRequest>(`/api/v1/leave-requests/${id}/decision/`,token,tenant,'POST',{action,decision_note}),
+    withdraw:(token:string,tenant:string,id:string)=>send<LeaveRequest>(`/api/v1/leave-requests/${id}/withdraw/`,token,tenant,'POST',{}),
+    notifications:(token:string,tenant:string)=>send<NotificationEntry[]>('/api/v1/notifications/',token,tenant),
+  };
+}

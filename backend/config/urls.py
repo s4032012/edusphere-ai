@@ -1,3 +1,4 @@
+from apps.attendance.views import (AttendanceSessionList, AttendanceSessionDetail, AttendanceBatchWrite, AttendanceSubmit, AttendanceLock, StudentAttendance, LeaveListCreate, LeaveDecision, LeaveWithdraw, MyNotifications)
 from apps.access.sprint1_views import (YearView, SubjectView, StaffView, StudentUpdateView, StudentArchiveView,
  ClassroomDetailView, EnrollmentListView, EnrollmentEndView, AssignmentListView, AssignmentEndView,
  GuardianListView, GuardianAccountView, AuditListView, SchoolDashboardView)
@@ -8,6 +9,16 @@ from apps.access.views import MeView, StudentListCreateView, StudentDetailView, 
 from apps.access.views import TeacherAssignmentCreateView, GuardianLinkCreateView, EnrollmentCreateView, GuardianVerifyView
 
 urlpatterns = [
+    path('api/v1/attendance/sessions/', AttendanceSessionList.as_view()),
+    path('api/v1/attendance/sessions/<uuid:session_id>/', AttendanceSessionDetail.as_view()),
+    path('api/v1/attendance/sessions/<uuid:session_id>/records/', AttendanceBatchWrite.as_view()),
+    path('api/v1/attendance/sessions/<uuid:session_id>/submit/', AttendanceSubmit.as_view()),
+    path('api/v1/attendance/sessions/<uuid:session_id>/lock/', AttendanceLock.as_view()),
+    path('api/v1/attendance/students/<uuid:student_id>/', StudentAttendance.as_view()),
+    path('api/v1/leave-requests/', LeaveListCreate.as_view()),
+    path('api/v1/leave-requests/<uuid:leave_id>/decision/', LeaveDecision.as_view()),
+    path('api/v1/leave-requests/<uuid:leave_id>/withdraw/', LeaveWithdraw.as_view()),
+    path('api/v1/notifications/', MyNotifications.as_view()),
     path('api/v1/admin/dashboard/', SchoolDashboardView.as_view()),
     path('api/v1/academic-years/', YearView.as_view()),
     path('api/v1/subjects/', SubjectView.as_view()),

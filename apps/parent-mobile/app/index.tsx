@@ -1,3 +1,4 @@
+import {LeaveAndAttendance} from '../components/LeaveAndAttendance';
 import {useEffect,useState,useRef} from 'react';
 import {ActivityIndicator,Pressable,SafeAreaView,ScrollView,StyleSheet,Text,TextInput,View} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
@@ -18,6 +19,7 @@ export default function Home(){
     const timer=setTimeout(()=>{void signOut();setError('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');},Math.max(0,user.session_expires_at*1000-Date.now()));
     return ()=>clearTimeout(timer);
   },[user]);
+  useEffect(()=>{if(token&&tenant)void loadStudents();},[token,tenant]);
   const memberships=user?membershipsFor(user,allowed):[];
   useEffect(()=>{let live=true;(async()=>{try{const saved=await SecureStore.getItemAsync(accessKey);
     if(!saved)return;const me=await api.me(saved);const scoped=membershipsFor(me,allowed);
@@ -39,7 +41,7 @@ export default function Home(){
     try{await SecureStore.deleteItemAsync(accessKey);}catch{setError('Không thể xóa phiên đã lưu. Vui lòng thử lại.');}}
   if(loading)return <SafeAreaView style={styles.page}><ActivityIndicator color={accent} size="large"/></SafeAreaView>;
   return <SafeAreaView style={styles.page}><ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-    <Text style={styles.kicker}>EDUSPHERE AI · SPRINT 0 v2</Text>
+    <Text style={styles.kicker}>EDUSPHERE AI · SPRINT 2</Text>
     <Text style={styles.title}>EduSphere Parent</Text>
     <Text style={styles.desc}>Quản lý và học tập thông minh · dữ liệu demo</Text>
     {!user? <View style={styles.card}><Text style={styles.heading}>Đăng nhập</Text>
@@ -56,7 +58,7 @@ export default function Home(){
     </View><View style={styles.card}><Text style={styles.heading}>Danh sách học sinh</Text>
       {students.length===0?<Text style={styles.desc}>Chưa tải dữ liệu hoặc không có học sinh trong phạm vi được cấp quyền.</Text>
         :students.map(s=><View key={s.id} style={styles.student}><Text style={styles.studentName}>{s.full_name}</Text><Text style={styles.small}>{s.student_code}</Text></View>)}
-    </View></>}
+    </View><LeaveAndAttendance key={token+tenant} token={token} tenant={tenant} students={students} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');}}/></>}
     {working?<ActivityIndicator accessibilityLabel="Đang tải" color={accent}/>:null}
     {error?<Text accessibilityRole="alert" style={styles.error}>{error}</Text>:null}
     <Text style={styles.footer}>PROTOTYPE • Chưa có refresh token, push notification, AI hay các thao tác ghi điểm.</Text>

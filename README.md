@@ -1,4 +1,8 @@
-# EduSphere AI · Sprint 1 — School Administration Core
+# EduSphere AI · Sprint 2 — Attendance & Leave Requests
+
+**Sprint 2 đã tích hợp:** GVCN điểm danh trên Teacher Web/Mobile; phụ huynh gửi/rút đơn nghỉ và xem lịch sử trên Parent Mobile. API hỗ trợ duyệt đơn, khóa phiên và outbox thông báo (chưa gửi push). Xem [phạm vi](docs/SPRINT2_IMPLEMENTATION.md), [API](docs/SPRINT2_API.md) và [kịch bản nghiệm thu](docs/SPRINT2_TEST_PLAN.md).
+
+Chạy `docker compose exec backend python manage.py migrate --noinput` khi cập nhật từ Sprint 1. Teacher Web: `pnpm dev:teacher-web` → http://127.0.0.1:5174 (`gvcn_a`). Mobile: `pnpm dev:teacher` và `pnpm dev:parent` ở hai terminal riêng. Giữ cấu hình LAN đang dùng trong `.env`.
 
 **Sprint 1 đã tích hợp:** Dashboard, năm học, môn học, nhân sự, lớp, học sinh, phân lớp/phân công, phụ huynh và audit trên Admin Web. Xem [phạm vi Sprint 1](docs/SPRINT1_IMPLEMENTATION.md) và [kiểm thử/nghiệm thu](docs/SPRINT1_TEST_PLAN.md). Tài khoản mới chưa có luồng kích hoạt; sửa/lưu trữ học sinh và sửa lớp hiện qua API.
 
