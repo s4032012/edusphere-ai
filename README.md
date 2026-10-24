@@ -62,7 +62,17 @@ pnpm dev:student
   `!override` yêu cầu Docker Compose 2.24.4+. Cảnh báo: HTTP + demo JWT không an toàn trên mạng không tin cậy.
   Tốt hơn dùng HTTPS tunnel riêng/đường kết nối bảo mật trước khi thử với người dùng ngoài nhóm dev.
 
-**Expo SDK baseline: SDK 57**; SDK 58 phát hành 15/10/2026, cân nhắc upgrade sau khi kiểm tra Expo Go và library compatibility.
+**Expo SDK baseline: SDK 58** cho cả Teacher, Parent và Student, tương thích Expo Go SDK 58. Dependency native đã đồng bộ theo Expo (React Native 0.88.0 / React 19.3.0).
+
+Sau nâng SDK, dừng Metro cũ bằng `Ctrl+C` ở từng terminal, rồi chạy từng lệnh trong terminal riêng:
+
+```bash
+pnpm dev:teacher --clear
+pnpm dev:parent --clear
+pnpm dev:student --clear
+```
+
+Quét lại QR mới bằng Expo Go. Nếu vẫn báo SDK 57, kiểm tra bạn đã dừng đúng server cũ và mở đúng thư mục dự án. Cài từ Git ở máy khác cần chạy `pnpm install --frozen-lockfile` trước. Development build tùy chỉnh cần build lại sau khi đổi SDK. [Hướng dẫn nâng SDK của Expo](https://docs.expo.dev/workflow/upgrading-expo-sdk-walkthrough/).
 
 ## Demo accounts (100% synthetic)
 Password cho mọi tài khoản demo: `DemoOnly!ChangeMe123`.
@@ -118,5 +128,5 @@ Các file Word/PDF v2.0 ban đầu là tài liệu lịch sử; trạng thái hi
 Reference docs:
 - https://docs.expo.dev/guides/monorepos/
 - https://docs.expo.dev/router/introduction/
-- https://docs.expo.dev/versions/v57.0.0/
+- https://docs.expo.dev/versions/v58.0.0/
 - https://expo.dev/changelog/sdk-58

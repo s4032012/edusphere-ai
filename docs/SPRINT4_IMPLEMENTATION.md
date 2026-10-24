@@ -20,7 +20,7 @@ pnpm dev:parent        # Expo 8082
 pnpm dev:student       # Expo 8083
 ```
 
-Restart Teacher Expo after installing the new native date/time picker (`@react-native-community/datetimepicker` 9.1.0, matched to Expo 57). Native development builds need rebuilding if this module was absent. Preserve working LAN API `.env` and Compose override settings; do not replace them with localhost for physical phones. Database startup applies committed migrations; no automatic `makemigrations`.
+Restart all three Expo servers with `--clear` after upgrading to SDK 58 (required for current Expo Go). Teacher includes the native date/time picker (`@react-native-community/datetimepicker` 9.2.1, matched to Expo 58). Native development builds need rebuilding if this module was absent. Preserve working LAN API `.env` and Compose override settings; do not replace them with localhost for physical phones. Database startup applies committed migrations; no automatic `makemigrations`.
 
 Demo password remains `DemoOnly!ChangeMe123`. `gvbm_a` creates a draft for their assigned class/subject, edits then publishes. `student_a` opens Homework, writes and submits. Teacher opens the roster, enters feedback/optional score and returns work. `parent_a` reloads Homework to view status and feedback without answer text. `gvcn_a` can view class progress but cannot manage/return tasks. Admin homework endpoints are read-only; no new Admin UI in this sprint.
 
