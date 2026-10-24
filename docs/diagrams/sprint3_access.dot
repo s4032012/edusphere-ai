@@ -1,0 +1,11 @@
+digraph G {graph [rankdir=LR,bgcolor="white",pad=.25,nodesep=.45,ranksep=.75];node [shape=box,style="rounded,filled",fontname="DejaVu Sans",fontsize=12,color="#C3CCD8",fillcolor="#F2F5F9"];edge [color="#67859A",fontsize=10,fontname="DejaVu Sans"];
+Teacher [label="Subject Teacher\ncurrent class + subject"];
+Home [label="Homeroom Teacher\nassigned class"];
+Admin [label="School Admin / Academic Affairs"];
+Guardian [label="Verified Guardian\nvalid linked child"];
+Child [label="Student\nself identity"];
+Draft [label="Draft / Locked grades",fillcolor="#FFF3D9"];
+Published [label="Published grades",fillcolor="#E3F3E6"];
+Config [label="Setup · Publish · Approve revision",fillcolor="#DCEEFE"];
+Teacher->Draft [label="edit draft / request revision"];Teacher->Published [label="own subject"];Home->Published [label="homeroom class"];Admin->Config;Admin->Draft;Admin->Published;Guardian->Published;Child->Published;
+}

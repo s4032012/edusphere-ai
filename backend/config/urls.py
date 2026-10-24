@@ -1,3 +1,4 @@
+from apps.grades.views import (BookListCreate, BookDetail, AssessmentCreate, EntriesBatch, AssessmentLock as GradeLock, AssessmentPublish, StudentGrades, RevisionCreate, RevisionList, RevisionDecision)
 from apps.attendance.views import (AttendanceSessionList, AttendanceSessionDetail, AttendanceBatchWrite, AttendanceSubmit, AttendanceLock, StudentAttendance, LeaveListCreate, LeaveDecision, LeaveWithdraw, MyNotifications)
 from apps.access.sprint1_views import (YearView, SubjectView, StaffView, StudentUpdateView, StudentArchiveView,
  ClassroomDetailView, EnrollmentListView, EnrollmentEndView, AssignmentListView, AssignmentEndView,
@@ -9,6 +10,16 @@ from apps.access.views import MeView, StudentListCreateView, StudentDetailView, 
 from apps.access.views import TeacherAssignmentCreateView, GuardianLinkCreateView, EnrollmentCreateView, GuardianVerifyView
 
 urlpatterns = [
+    path('api/v1/gradebooks/', BookListCreate.as_view()),
+    path('api/v1/gradebooks/<uuid:book_id>/', BookDetail.as_view()),
+    path('api/v1/gradebooks/<uuid:book_id>/assessments/', AssessmentCreate.as_view()),
+    path('api/v1/assessments/<uuid:assessment_id>/entries/', EntriesBatch.as_view()),
+    path('api/v1/assessments/<uuid:assessment_id>/lock/', GradeLock.as_view()),
+    path('api/v1/assessments/<uuid:assessment_id>/publish/', AssessmentPublish.as_view()),
+    path('api/v1/students/<uuid:student_id>/grades/', StudentGrades.as_view()),
+    path('api/v1/grade-entries/<uuid:entry_id>/revision-requests/', RevisionCreate.as_view()),
+    path('api/v1/grade-revisions/', RevisionList.as_view()),
+    path('api/v1/grade-revisions/<uuid:revision_id>/decision/', RevisionDecision.as_view()),
     path('api/v1/attendance/sessions/', AttendanceSessionList.as_view()),
     path('api/v1/attendance/sessions/<uuid:session_id>/', AttendanceSessionDetail.as_view()),
     path('api/v1/attendance/sessions/<uuid:session_id>/records/', AttendanceBatchWrite.as_view()),

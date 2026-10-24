@@ -16,7 +16,11 @@ Sprint 2 adds 24 API regression tests, three pure rule tests and five PostgreSQL
 
 Reproduce: `bash scripts/verify_sprint2.sh` (SQLite by default; honors DB environment). PostgreSQL: `docker compose exec -T backend python manage.py test apps.academics.tests apps.access.tests apps.attendance.tests`. Tests use a separate disposable test database, not the demo database.
 
-## Manual acceptance pending
+## User acceptance — 2026-10-24
+
+User confirmed “oke r” after the acceptance request; PR #2 was merged into main. This records the user’s acceptance, not a separate automated or device-by-device QA result.
+
+## Manual acceptance checklist
 
 Browser control stalled while opening Safari; no visual/browser acceptance is claimed. Mobile bundle exports do not replace tests on a device.
 

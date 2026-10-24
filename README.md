@@ -1,4 +1,9 @@
-# EduSphere AI · Sprint 2 — Attendance & Leave Requests
+# EduSphere AI · Sprint 3 — Grade Management
+
+**Sprint 3 đã tích hợp:** Admin tạo/công bố sổ điểm và duyệt điều chỉnh; giáo viên bộ môn nhập/khóa điểm trên Web/Mobile; Parent/Student xem kết quả đã công bố. Xem [phạm vi và kết quả kỹ thuật](docs/SPRINT3_DELIVERY_MANIFEST.md), [API](docs/SPRINT3_API.md), [nghiệm thu](docs/SPRINT3_ACCEPTANCE.md).
+
+Sau cập nhật source, chạy `docker compose exec backend python manage.py migrate --noinput`. Demo: `admin_a` tạo sổ điểm cho lớp/môn → `gvbm_a` nhập và khóa → `admin_a` công bố → `parent_a`/`student_a` xem trên mobile. Đề nghị điều chỉnh thực hiện trên Teacher Web. Các lệnh chạy app và cấu hình LAN bên dưới giữ nguyên.
+
 
 **Sprint 2 đã tích hợp:** GVCN điểm danh trên Teacher Web/Mobile; phụ huynh gửi/rút đơn nghỉ và xem lịch sử trên Parent Mobile. API hỗ trợ duyệt đơn, khóa phiên và outbox thông báo (chưa gửi push). Xem [phạm vi](docs/SPRINT2_IMPLEMENTATION.md), [API](docs/SPRINT2_API.md) và [kịch bản nghiệm thu](docs/SPRINT2_TEST_PLAN.md).
 
