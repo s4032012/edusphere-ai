@@ -1,3 +1,4 @@
+import {HomeworkManager} from '../components/HomeworkManager';
 import {GradeManager} from '../components/GradeManager';
 import {AttendanceManager} from '../components/AttendanceManager';
 import {useEffect,useState,useRef} from 'react';
@@ -58,10 +59,10 @@ export default function Home(){
     </View><View style={styles.card}><Text style={styles.heading}>Danh sách học sinh</Text>
       {students.length===0?<Text style={styles.desc}>Chưa tải dữ liệu hoặc không có học sinh trong phạm vi được cấp quyền.</Text>
         :students.map(s=><View key={s.id} style={styles.student}><Text style={styles.studentName}>{s.full_name}</Text><Text style={styles.small}>{s.student_code}</Text></View>)}
-    </View>{memberships.some(m=>m.tenant_id===tenant&&m.role==='HOMEROOM_TEACHER')&&<AttendanceManager key={token+tenant} token={token} tenant={tenant} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');}}/>}{memberships.some(m=>m.tenant_id===tenant&&m.role==='SUBJECT_TEACHER')&&<GradeManager key={'grades'+token+tenant} token={token} tenant={tenant} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/>}</>}
+    </View>{memberships.some(m=>m.tenant_id===tenant&&m.role==='HOMEROOM_TEACHER')&&<AttendanceManager key={token+tenant} token={token} tenant={tenant} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');}}/>}{memberships.some(m=>m.tenant_id===tenant&&m.role==='SUBJECT_TEACHER')&&<GradeManager key={'grades'+token+tenant} token={token} tenant={tenant} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/>}<HomeworkManager key={'homework'+token+tenant} token={token} tenant={tenant} canCreate={memberships.some(m=>m.tenant_id===tenant&&['SUBJECT_TEACHER','DEPARTMENT_HEAD'].includes(m.role))} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/></>}
     {working?<ActivityIndicator accessibilityLabel="Đang tải" color={accent}/>:null}
     {error?<Text accessibilityRole="alert" style={styles.error}>{error}</Text>:null}
-    <Text style={styles.footer}>PROTOTYPE • Chưa có refresh token, push notification, AI hay các thao tác ghi điểm.</Text>
+    <Text style={styles.footer}>PROTOTYPE • Dữ liệu demo. Chưa có refresh token, gửi push hoặc AI.</Text>
   </ScrollView></SafeAreaView>;
 }
 const styles=StyleSheet.create({

@@ -335,9 +335,18 @@ class MyNotifications(TenantAPIView):
     def get(self,request):
         items=NotificationOutbox.objects.filter(tenant=self.tenant,recipient=request.user,state='QUEUED').order_by('-created_at')
         data=[]
-        if 'PARENT' not in self.roles:
+        if not {'PARENT','STUDENT'} & self.roles:
             return Response(data)
         for event in items:
+            if event.event_type == 'HOMEWORK_RETURNED':
+                from apps.homework.models import HomeworkSubmission
+                from apps.homework.views import enrollments, guardian, self_student
+                sub=HomeworkSubmission.objects.filter(tenant=self.tenant,id=event.subject_id,state='RETURNED').select_related('student','assignment').first()
+                if sub and enrollments(self.tenant,student=sub.student,classroom=sub.assignment.classroom).exists() and (guardian(self,sub.student) or self_student(self,sub.student)):
+                    data.append({'id':str(event.id),'type':event.event_type,'payload':event.payload,'state':event.state,'created_at':event.created_at.isoformat()})
+                if len(data)==100: break
+                continue
+            if 'PARENT' not in self.roles: continue
             if event.event_type == 'UNEXCUSED_ABSENCE':
                 record=AttendanceRecord.objects.filter(tenant=self.tenant,id=event.subject_id).select_related('student').first()
                 student=record.student if record else None

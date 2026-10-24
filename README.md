@@ -1,4 +1,8 @@
-# EduSphere AI · Sprint 3 — Grade Management
+# EduSphere AI · Sprint 4 — Assignment & Homework
+
+**Sprint 4 đã tích hợp:** Giáo viên tạo/sửa nháp, giao/đóng bài và trả nhận xét/điểm bài tập trên Teacher Web/Mobile. Student Mobile lưu/nộp văn bản; Parent Mobile xem tiến độ/phản hồi; GVCN theo dõi lớp ở chế độ chỉ đọc. Điểm bài tập không tự chuyển sang sổ điểm Sprint 3. Xem [phạm vi và kiểm chứng](docs/SPRINT4_DELIVERY_MANIFEST.md), [API](docs/SPRINT4_API.md), [hướng dẫn chạy](docs/SPRINT4_IMPLEMENTATION.md), [nghiệm thu](docs/SPRINT4_ACCEPTANCE.md).
+
+Sau khi cập nhật: `pnpm install --frozen-lockfile` và `docker compose exec backend python manage.py migrate --noinput`. Khởi động lại Expo Teacher vì đã thêm bộ chọn ngày giờ. Giữ nguyên cấu hình API LAN đang dùng. Luồng demo: `gvbm_a` giao bài → `student_a` nộp → `gvbm_a` trả bài → `parent_a` xem phản hồi.
 
 **Sprint 3 đã tích hợp:** Admin tạo/công bố sổ điểm và duyệt điều chỉnh; giáo viên bộ môn nhập/khóa điểm trên Web/Mobile; Parent/Student xem kết quả đã công bố. Xem [phạm vi và kết quả kỹ thuật](docs/SPRINT3_DELIVERY_MANIFEST.md), [API](docs/SPRINT3_API.md), [nghiệm thu](docs/SPRINT3_ACCEPTANCE.md).
 

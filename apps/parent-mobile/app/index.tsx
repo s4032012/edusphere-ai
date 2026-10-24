@@ -1,3 +1,4 @@
+import {HomeworkParent} from '../components/HomeworkParent';
 import {GradeViewer} from '../components/GradeViewer';
 import {LeaveAndAttendance} from '../components/LeaveAndAttendance';
 import {useEffect,useState,useRef} from 'react';
@@ -59,10 +60,10 @@ export default function Home(){
     </View><View style={styles.card}><Text style={styles.heading}>Danh sách học sinh</Text>
       {students.length===0?<Text style={styles.desc}>Chưa tải dữ liệu hoặc không có học sinh trong phạm vi được cấp quyền.</Text>
         :students.map(s=><View key={s.id} style={styles.student}><Text style={styles.studentName}>{s.full_name}</Text><Text style={styles.small}>{s.student_code}</Text></View>)}
-    </View><LeaveAndAttendance key={token+tenant} token={token} tenant={tenant} students={students} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');}}/><GradeViewer key={'grades'+token+tenant} token={token} tenant={tenant} students={students} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/></>}
+    </View><LeaveAndAttendance key={token+tenant} token={token} tenant={tenant} students={students} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');}}/><GradeViewer key={'grades'+token+tenant} token={token} tenant={tenant} students={students} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/><HomeworkParent key={'homework'+token+tenant} token={token} tenant={tenant} students={students} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/></>}
     {working?<ActivityIndicator accessibilityLabel="Đang tải" color={accent}/>:null}
     {error?<Text accessibilityRole="alert" style={styles.error}>{error}</Text>:null}
-    <Text style={styles.footer}>PROTOTYPE • Chưa có refresh token, push notification, AI hay các thao tác ghi điểm.</Text>
+    <Text style={styles.footer}>PROTOTYPE • Dữ liệu demo. Chưa có refresh token, gửi push hoặc AI.</Text>
   </ScrollView></SafeAreaView>;
 }
 const styles=StyleSheet.create({
