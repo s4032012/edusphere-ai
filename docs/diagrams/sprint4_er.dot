@@ -1,0 +1,12 @@
+digraph ER {
+ graph [rankdir=TB, bgcolor="white", nodesep="0.6",ranksep="1.0",label="SPRINT 4 — DATA MODEL (simplified)",labelloc=t,fontname="DejaVu Sans",fontsize=20,fontcolor="#183153"];
+ node [shape=record,style="rounded,filled",fillcolor="#eef5fb",color="#9dbbd0",fontname="DejaVu Sans",fontsize=12];
+ tenant [label="{Tenant|id PK|code}"];
+ classroom [label="{Classroom|id PK|tenant_id FK|year_id FK}"];
+ subject [label="{Subject|id PK|tenant_id FK}"];
+ assignment [fillcolor="#dbf2ee",label="{HomeworkAssignment|id PK|tenant_id FK|classroom_id FK|subject_id FK|teacher_id FK|due_at / state}"];
+ sub [fillcolor="#fff1d6",label="{HomeworkSubmission|id PK|tenant_id FK|assignment_id FK|student_id FK|content_text / state / version|score / feedback}"];
+ student [label="{Student|id PK|tenant_id FK}"];
+ account [label="{Account|id PK|username}"];
+ tenant->assignment;classroom->assignment;subject->assignment;account->assignment[label="creates"];assignment->sub[label="1 : many"];student->sub[label="1 : many"];
+}

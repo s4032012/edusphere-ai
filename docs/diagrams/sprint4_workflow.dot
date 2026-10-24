@@ -1,0 +1,15 @@
+digraph HomeworkFlow {
+ graph [rankdir=TB, bgcolor="white", pad="0.3", nodesep="0.45", ranksep="0.65", fontname="DejaVu Sans", label="SPRINT 4 — HOMEWORK WORKFLOW", labelloc=t, fontsize=21, fontcolor="#183153"];
+ node [shape=box, style="rounded,filled", fillcolor="#eef5fb", color="#aec6d5", fontname="DejaVu Sans", fontsize=12, margin="0.20,0.14"];
+ edge [color="#7892a6",fontname="DejaVu Sans",fontsize=10,arrowsize=.7];
+ draft [label="Teacher creates\nDRAFT",fillcolor="#e9eef5"];
+ pub [label="Teacher publishes\nPUBLISHED",fillcolor="#dcf3ef"];
+ stud [label="Student reads\nassignment",fillcolor="#eaf2ff"];
+ save [label="Save draft\nDRAFT",fillcolor="#fff3da"];
+ submit [label="Submit answer\nSUBMITTED",fillcolor="#e9e9ff"];
+ review [label="Teacher reviews\n+ feedback",fillcolor="#e9eef5"];
+ returned [label="Return result\nRETURNED",fillcolor="#dff3e8"];
+ parent [label="Parent sees\nstatus / feedback",fillcolor="#f7eafa"];
+ closed [label="Close assignment\nCLOSED",fillcolor="#f0eeee"];
+ draft->pub;pub->stud;stud->save;save->save[label="edit / version"];save->submit;stud->submit;submit->submit[label="resubmit before deadline"];submit->review;review->returned;returned->parent;pub->closed;closed->review[label="review prior submissions",constraint=false];
+}

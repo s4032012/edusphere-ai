@@ -1,3 +1,4 @@
+from apps.homework.views import (HomeworkListCreate, HomeworkDetail, HomeworkTransition, HomeworkRoster, StudentHomework, MySubmission, ReturnHomework)
 from apps.grades.views import (BookListCreate, BookDetail, AssessmentCreate, EntriesBatch, AssessmentLock as GradeLock, AssessmentPublish, StudentGrades, RevisionCreate, RevisionList, RevisionDecision)
 from apps.attendance.views import (AttendanceSessionList, AttendanceSessionDetail, AttendanceBatchWrite, AttendanceSubmit, AttendanceLock, StudentAttendance, LeaveListCreate, LeaveDecision, LeaveWithdraw, MyNotifications)
 from apps.access.sprint1_views import (YearView, SubjectView, StaffView, StudentUpdateView, StudentArchiveView,
@@ -10,6 +11,13 @@ from apps.access.views import MeView, StudentListCreateView, StudentDetailView, 
 from apps.access.views import TeacherAssignmentCreateView, GuardianLinkCreateView, EnrollmentCreateView, GuardianVerifyView
 
 urlpatterns = [
+    path('api/v1/homework/', HomeworkListCreate.as_view()),
+    path('api/v1/homework/<uuid:task_id>/', HomeworkDetail.as_view()),
+    path('api/v1/homework/<uuid:task_id>/my-submission/', MySubmission.as_view()),
+    path('api/v1/homework/<uuid:task_id>/roster/', HomeworkRoster.as_view()),
+    path('api/v1/homework/students/<uuid:student_id>/', StudentHomework.as_view()),
+    path('api/v1/homework/submissions/<uuid:submission_id>/return/', ReturnHomework.as_view()),
+    path('api/v1/homework/<uuid:task_id>/<str:action>/', HomeworkTransition.as_view()),
     path('api/v1/gradebooks/', BookListCreate.as_view()),
     path('api/v1/gradebooks/<uuid:book_id>/', BookDetail.as_view()),
     path('api/v1/gradebooks/<uuid:book_id>/assessments/', AssessmentCreate.as_view()),

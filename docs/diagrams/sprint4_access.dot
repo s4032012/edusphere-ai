@@ -1,0 +1,11 @@
+digraph Access {
+ graph [rankdir=TB, bgcolor="white",fontname="DejaVu Sans",label="SPRINT 4 — RESOURCE AUTHORIZATION",labelloc=t,fontsize=19,fontcolor="#183153",nodesep="0.4",ranksep="0.5"];
+ node [shape=box,style="rounded,filled",color="#a8c0d4",fillcolor="#eaf2fb",fontname="DejaVu Sans",fontsize=11];
+ actor [label="Authenticated account\n+ X-Tenant-ID"];
+ member [label="Active tenant membership?"];
+ policy [label="Check actor relationship\nTeacherAssignment / Enrollment /\nGuardianLink verified / StudentAccount"];
+ allow [label="Allow scoped endpoint",fillcolor="#dff3e5"];
+ block [label="Deny: 403 / 404",fillcolor="#fbe6e6"];
+ obj [label="Tenant-scoped Assignment\n+ Submission"];
+ actor->member; member->block[label="no"]; member->obj[label="yes"];obj->policy;policy->allow[label="valid + permitted"];policy->block[label="invalid / out of scope"];
+}

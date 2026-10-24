@@ -141,3 +141,45 @@ export function createGradesApi(baseUrl:string){
       call<{id:string;state:string;entry_version:number}>(`/api/v1/grade-revisions/${id}/decision/`,token,tenant,'POST',{action,decision_note}),
   };
 }
+
+/** Sprint 4: Assignment & Homework. Feedback score is NOT a gradebook mark. */
+export type HomeworkState = 'DRAFT'|'PUBLISHED'|'CLOSED';
+export type SubmissionState = 'DRAFT'|'SUBMITTED'|'RETURNED';
+export type HomeworkStatus = SubmissionState|'NOT_SUBMITTED'|'OVERDUE';
+export type Homework = {id:string;classroom_id:string;classroom_code:string;subject_id:string;
+  subject_name:string;teacher_id:string;title:string;instructions:string;due_at:string;
+  allow_late:boolean;state:HomeworkState;created_at:string;can_manage:boolean};
+export type HomeworkSubmission = {id:string;student_id:string;state:SubmissionState;
+  version:number;submitted_at:string|null;returned_at:string|null;content_text:string|null;
+  feedback:string|null;score:string|null};
+export type HomeworkRow = {student_id:string;student_code:string;full_name:string;
+  status:HomeworkStatus;submission:HomeworkSubmission|null};
+export type HomeworkRoster = {assignment:Homework;students:HomeworkRow[]};
+export type StudentHomeworkOverview = {student_id:string;student_name:string;
+  items:{assignment:Homework;status:HomeworkStatus;submission:HomeworkSubmission|null}[]};
+export function createHomeworkApi(baseUrl:string){
+  const base=trimBase(baseUrl);
+  const call=<T,>(path:string,token:string,tenant:string,method:'GET'|'POST'|'PUT'|'PATCH'='GET',payload?:unknown):Promise<T>=>
+    jsonFetch<T>(`${base}${path}`,{method,headers:{'Authorization':`Bearer ${token}`,'X-Tenant-ID':tenant,
+      ...(payload===undefined?{}:{'Content-Type':'application/json'})},
+      ...(payload===undefined?{}:{body:JSON.stringify(payload)})});
+  return {
+    list:(token:string,tenant:string)=>call<Homework[]>('/api/v1/homework/',token,tenant),
+    create:(token:string,tenant:string,data:{classroom_id:string;subject_id:string;title:string;
+      instructions:string;due_at:string;allow_late:boolean})=>call<Homework>('/api/v1/homework/',token,tenant,'POST',data),
+    detail:(token:string,tenant:string,id:string)=>call<Homework>(`/api/v1/homework/${id}/`,token,tenant),
+    edit:(token:string,tenant:string,id:string,data:Partial<Pick<Homework,'title'|'instructions'|'due_at'|'allow_late'>>)=>
+      call<Homework>(`/api/v1/homework/${id}/`,token,tenant,'PATCH',data),
+    publish:(token:string,tenant:string,id:string)=>call<Homework>(`/api/v1/homework/${id}/publish/`,token,tenant,'POST',{}),
+    close:(token:string,tenant:string,id:string)=>call<Homework>(`/api/v1/homework/${id}/close/`,token,tenant,'POST',{}),
+    roster:(token:string,tenant:string,id:string)=>call<HomeworkRoster>(`/api/v1/homework/${id}/roster/`,token,tenant),
+    student:(token:string,tenant:string,id:string)=>call<StudentHomeworkOverview>(`/api/v1/homework/students/${id}/`,token,tenant),
+    mine:(token:string,tenant:string,id:string)=>call<{assignment:Homework;submission:HomeworkSubmission|null}>(`/api/v1/homework/${id}/my-submission/`,token,tenant),
+    submit:(token:string,tenant:string,id:string,content_text:string,action:'save'|'submit',expected_version?:number)=>
+      call<HomeworkSubmission>(`/api/v1/homework/${id}/my-submission/`,token,tenant,'PUT',{
+        content_text,action,expected_version:expected_version??0}),
+    returnWork:(token:string,tenant:string,submission_id:string,feedback:string,expected_version:number,score?:string)=>
+      call<HomeworkSubmission>(`/api/v1/homework/submissions/${submission_id}/return/`,token,tenant,'POST',{
+        feedback,expected_version,...(score?{score}:{})}),
+  };
+}

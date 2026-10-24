@@ -23,9 +23,9 @@
 
 Toàn bộ backend: PostgreSQL 132/132 đạt; SQLite 119 đạt và 13 ca PostgreSQL được bỏ qua. Reproduce: `bash scripts/verify_sprint3.sh` hoặc `docker compose exec -T backend python manage.py test apps.academics.tests apps.access.tests apps.attendance.tests apps.grades.tests`.
 
-## Nghiệm thu thủ công còn lại
+## Nghiệm thu người dùng — đã xác nhận
 
-Chưa đánh dấu browser/thiết bị thật đã đạt. Công cụ điều khiển trình duyệt đã từng treo trong Sprint 2; lần này kiểm chứng tự động và đọc source không thay thế kiểm thử tương tác.
+Người dùng xác nhận “oke rồi á, giờ qua sprint 4 nha” ngày 2026-10-24. PR #3 đã gộp vào main, commit `32af54c8d0069f0b85951cef8f3ee54637ec2d1e`. Xác nhận này là nghiệm thu của người dùng; không suy diễn rằng từng thiết bị/kịch bản dưới đây đã được chạy tự động.
 
 1. `admin_a` trên Admin Web → Sổ điểm → chọn lớp/môn, HK I, SCORE, hai cột TX. Chọn đúng môn được phân công cho `gvbm_a`.
 2. `gvbm_a` trên Teacher Web → tạo TX1 → nhập điểm tất cả học sinh → lưu → khóa. Nếu thay giá trị rồi bấm khóa, hệ thống lưu giá trị mới trước khi khóa. Dữ liệu trống/sai phải báo lỗi và không khóa.
