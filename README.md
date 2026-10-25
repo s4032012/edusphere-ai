@@ -1,4 +1,11 @@
-# EduSphere AI · Sprint 4 — Assignment & Homework
+# EduSphere AI · Sprint 5 — Communication & Notification
+
+**Sprint 5 đã tích hợp:** Thông báo trường/khối/lớp, hội thoại giáo viên–phụ huynh, phiếu hỗ trợ và hộp thông báo đã đọc/chưa đọc. Có Support Desk mới tại **http://127.0.0.1:5177**. Xem [hướng dẫn Sprint 5](docs/SPRINT5_IMPLEMENTATION.md), [kết quả kiểm chứng](docs/SPRINT5_DELIVERY_MANIFEST.md) và [kịch bản nghiệm thu](docs/SPRINT5_ACCEPTANCE.md).
+
+Cập nhật: `pnpm install --frozen-lockfile`, `docker compose exec backend python manage.py migrate --noinput`, `docker compose exec backend python manage.py seed_demo`. Khởi động lại ba Metro với `--clear` để nhận package mới; giữ `.env` API LAN và Expo SDK 58. Support Desk: `pnpm dev:support`, tài khoản `support_a` / `DemoOnly!ChangeMe123`. Nếu dùng Compose LAN, xem lệnh giữ LAN trong hướng dẫn Sprint 5 khi cập nhật CORS.
+
+Luồng demo: `admin_a` hoặc `gvcn_a` lưu nháp → công bố → `parent_a`/`student_a` đọc; `parent_a` nhắn GVCN và tạo yêu cầu hỗ trợ → `support_a` phản hồi/giải quyết/đóng. Chưa có gửi push/email/SMS. Cần nghiệm thu các luồng mới trên điện thoại thật.
+
 
 **Sprint 4 đã tích hợp:** Giáo viên tạo/sửa nháp, giao/đóng bài và trả nhận xét/điểm bài tập trên Teacher Web/Mobile. Student Mobile lưu/nộp văn bản; Parent Mobile xem tiến độ/phản hồi; GVCN theo dõi lớp ở chế độ chỉ đọc. Điểm bài tập không tự chuyển sang sổ điểm Sprint 3. Xem [phạm vi và kiểm chứng](docs/SPRINT4_DELIVERY_MANIFEST.md), [API](docs/SPRINT4_API.md), [hướng dẫn chạy](docs/SPRINT4_IMPLEMENTATION.md), [nghiệm thu](docs/SPRINT4_ACCEPTANCE.md).
 
@@ -18,7 +25,7 @@ Chạy `docker compose exec backend python manage.py migrate --noinput` khi cậ
 **Nền Sprint 0:** xem [kết quả kiểm chứng](docs/VERIFY.md), [phạm vi Sprint 0](docs/SPRINT0_SCOPE.md) và [API](docs/API.md).
 
 **Mục tiêu:** 1 trường THCS pilot (2 synthetic tenants để test). **Không dùng dữ liệu học sinh thật.**
-**Thiết kế:** 3 React Native + Expo apps **tách biệt**, 3 React Web apps, 1 Django REST backend, PostgreSQL.
+**Thiết kế:** 3 React Native + Expo apps **tách biệt**, 4 React Web apps, 1 Django REST backend, PostgreSQL.
 
 ## Quickstart (Mac M2)
 
@@ -42,6 +49,7 @@ pnpm test:contracts
 # 3. Chạy web (mỗi lệnh ở terminal khác)
 pnpm dev:admin       # http://localhost:5173
 pnpm dev:teacher-web # http://localhost:5174
+pnpm dev:support     # http://127.0.0.1:5177
 pnpm dev:platform    # http://localhost:5175 (UI shell; no backend API)
 
 # 4. Chạy 3 app điện thoại (mỗi app trên port Metro/terminal riêng)

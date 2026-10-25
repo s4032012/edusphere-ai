@@ -14,7 +14,8 @@
     "build:web": "turbo run build --filter=./apps/*-web --filter=@edusphere/platform-console",
     "expo:doctor": "pnpm --filter @edusphere/teacher-mobile exec expo install --check && pnpm --filter @edusphere/parent-mobile exec expo install --check && pnpm --filter @edusphere/student-mobile exec expo install --check",
     "test:contracts": "node --test packages/api-client/tests/*.test.mjs",
-    "build:mobile": "pnpm --filter \"./apps/*-mobile\" run build"
+    "build:mobile": "pnpm --filter \"./apps/*-mobile\" run build",
+    "dev:support": "pnpm --filter @edusphere/support-web dev"
   },
   "devDependencies": {
     "turbo": "^2.5.0",

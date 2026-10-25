@@ -1,0 +1,16 @@
+digraph G {
+ graph [fontname="DejaVu Sans",rankdir=LR,bgcolor="white",pad=.4,nodesep=.55,ranksep=1.0,label="SPRINT 5 | COMMUNICATION ECOSYSTEM",labelloc=t,fontsize=22,fontcolor="#13304E"];
+ node [shape=box,style="rounded,filled",fillcolor="#EFF5FA",color="#AAC2D7",fontname="DejaVu Sans",fontsize=11,margin="0.22,0.15"];
+ edge [fontname="DejaVu Sans",fontsize=9,color="#5B7C95",arrowsize=.7];
+ school [label="Admin / Support Desk\nReact Web",fillcolor="#DDF0FA"];
+ teacher [label="Teacher Web + Mobile\nReact / Expo",fillcolor="#DDF0FA"];
+ parent [label="Parent Mobile\nReact Native + Expo",fillcolor="#E9E6FB"];
+ pupil [label="Student Mobile\nReact Native + Expo",fillcolor="#E9E6FB"];
+ api [label="Django REST API\nTenant Auth + RBAC/ReBAC",fillcolor="#CDE5F4",color="#4685B4",penwidth=2];
+ comms [label="Communications Module\nAnnouncements / Messages / Tickets",fillcolor="#D7F0E8"];
+ queue [label="Notification Outbox\nDurable event intent only",fillcolor="#FFF1D9"];
+ db [label="PostgreSQL\nTenant-scoped records",fillcolor="#E6ECF2"];
+ {rank=same;school;teacher;parent;pupil}
+ school->api;teacher->api;parent->api;pupil->api;
+ api->comms;comms->queue;comms->db;queue->db;
+}

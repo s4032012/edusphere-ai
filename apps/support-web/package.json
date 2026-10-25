@@ -1,0 +1,25 @@
+{
+  "name": "@edusphere/support-web",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5177",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "@edusphere/api-client": "workspace:*",
+    "@edusphere/design-tokens": "workspace:*",
+    "@edusphere/communications-ui": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~6.0.3",
+    "@types/react": "~19.2.2",
+    "@types/react-dom": "~19.2.0"
+  }
+}

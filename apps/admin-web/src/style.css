@@ -5,3 +5,7 @@
 fieldset{border:0;margin:0;padding:0;min-width:0}
 :focus-visible{outline:3px solid #c48413;outline-offset:3px}
 @media(max-width:780px){.sidebar .tenant-card{display:flex;max-width:380px;margin-bottom:14px}.top-right{gap:8px}.topbar>span{min-width:0}.stat-card{padding:16px}.auth-card .field input{min-width:0}}
+
+.comms label{display:block;margin:12px 0}.comms input,.comms textarea,.comms select{display:block;width:100%;max-width:680px;padding:10px;border:1px solid #cbd5e1;border-radius:8px}.comms textarea{min-height:96px}.comms button{margin:6px 8px 6px 0;padding:10px 14px;border:0;border-radius:8px;background:#146d79;color:white;cursor:pointer}.comms button:disabled{opacity:.5}.comms section{margin:24px 0}.comms h4{margin-bottom:8px}
+
+.comms{padding:24px}.comms article{overflow-wrap:anywhere}

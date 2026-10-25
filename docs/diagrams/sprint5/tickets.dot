@@ -1,0 +1,7 @@
+digraph G {
+ graph [fontname="DejaVu Sans",bgcolor="white",rankdir=LR,pad=.4,label="SUPPORT TICKET | STATE MACHINE",labelloc=t,fontsize=20,fontcolor="#13304E",nodesep=.55,ranksep=.7];
+ node [shape=box,style="rounded,filled",fontname="DejaVu Sans",fontsize=11,fillcolor="#EBF4FB",color="#B1C8D9",margin=".2,.15"];
+ edge [fontname="DejaVu Sans",fontsize=9,color="#5B7895"];
+ o[label="OPEN"];i[label="IN_PROGRESS",fillcolor="#FFF0CF"];r[label="RESOLVED",fillcolor="#DCF2E5"];c[label="CLOSED",fillcolor="#E5EAF0"];
+ o->i;i->o;i->r;o->r;r->i;r->c;
+}

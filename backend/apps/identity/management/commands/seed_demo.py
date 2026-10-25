@@ -43,6 +43,8 @@ class Command(BaseCommand):
                 defaults={'full_name':f'Học sinh thử nghiệm {prefix.upper()}', 'date_of_birth':today - timedelta(days=14*365)})
             Enrollment.objects.get_or_create(tenant=tenant, student=stu, classroom=clazz,
                 defaults={'starts_on':year_start})
+            support = account(f'support_{prefix}', f'Hỗ trợ trường {prefix.upper()}')
+            membership(tenant, support, 'SUPPORT_STAFF')
             admin = account(f'admin_{prefix}', f'Quản trị trường {prefix.upper()}')
             homeroom = account(f'gvcn_{prefix}', f'GVCN trường {prefix.upper()}')
             subject_teacher = account(f'gvbm_{prefix}', f'GV Toán trường {prefix.upper()}')

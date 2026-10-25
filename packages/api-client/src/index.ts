@@ -183,3 +183,62 @@ export function createHomeworkApi(baseUrl:string){
         feedback,expected_version,...(score?{score}:{})}),
   };
 }
+
+/** Sprint 5 — Communication, announcement, support, and notification contracts. */
+export type NoticeScope='SCHOOL'|'GRADE'|'CLASS';
+export type AnnouncementDto={id:string;scope:NoticeScope;classroom_id:string|null;grade_level:number|null;
+ title:string;body:string;state:'DRAFT'|'PUBLISHED';created_at:string;published_at:string|null;read:boolean;can_publish:boolean;recipient_count:number|null;read_count:number|null};
+export type ContactDto={id:string;name:string};
+export type StudentContactsDto={student_id:string;teachers:ContactDto[];guardians:ContactDto[]};
+export type ConversationDto={id:string;student_id:string;student_name:string;teacher_id:string;teacher_name:string;
+ guardian_id:string;guardian_name:string;updated_at:string;unread_count:number};
+export type ConversationMessageDto={id:string;sender_id:string;body:string;created_at:string};
+export type TicketState='OPEN'|'IN_PROGRESS'|'RESOLVED'|'CLOSED';
+export type TicketDto={id:string;version:number;category:string;subject:string;state:TicketState;student_id:string|null;
+ requester_id:string;assignee_id:string|null;created_at:string;updated_at:string;details?:string;
+ replies?:{id:string;author_id:string;body:string;created_at:string}[]};
+export type InboxDto={id:string;type:string;payload:Record<string,unknown>;created_at:string;
+ read:boolean;delivery_state:string};
+export function createCommunicationsApi(baseUrl:string){
+  const base=trimBase(baseUrl);
+  const call=<T,>(path:string,token:string,tenant:string,method:'GET'|'POST'='GET',body?:unknown)=>
+    jsonFetch<T>(`${base}/api/v1/comms${path}`,{method,headers:{'Authorization':`Bearer ${token}`,
+      'X-Tenant-ID':tenant,...(body===undefined?{}:{'Content-Type':'application/json'})},
+      ...(body===undefined?{}:{body:JSON.stringify(body)})});
+  return {
+    announcements:(token:string,tenant:string)=>call<AnnouncementDto[]>('/announcements/',token,tenant),
+    createAnnouncement:(token:string,tenant:string,payload:{scope:NoticeScope;title:string;body:string;classroom_id?:string;grade_level?:number})=>
+      call<AnnouncementDto>('/announcements/',token,tenant,'POST',payload),
+    publishAnnouncement:(token:string,tenant:string,id:string)=>call<{id:string;state:string;recipients:number}>(`/announcements/${id}/publish/`,token,tenant,'POST',{}),
+    readAnnouncement:(token:string,tenant:string,id:string)=>call<{read:boolean}>(`/announcements/${id}/read/`,token,tenant,'POST',{}),
+    contacts:(token:string,tenant:string,studentId:string)=>call<StudentContactsDto>(`/students/${studentId}/contacts/`,token,tenant),
+    conversations:(token:string,tenant:string)=>call<ConversationDto[]>('/conversations/',token,tenant),
+    createConversation:(token:string,tenant:string,student_id:string,teacher_id:string,guardian_id:string)=>
+      call<ConversationDto>('/conversations/',token,tenant,'POST',{student_id,teacher_id,guardian_id}),
+    messages:(token:string,tenant:string,id:string)=>call<{conversation:ConversationDto;messages:ConversationMessageDto[]}>(`/conversations/${id}/messages/`,token,tenant),
+    sendMessage:(token:string,tenant:string,id:string,body:string,client_key:string)=>
+      call<ConversationMessageDto>(`/conversations/${id}/messages/`,token,tenant,'POST',{body,client_key}),
+    readConversation:(token:string,tenant:string,id:string,last_message_id:string|null)=>call<{read:boolean}>(`/conversations/${id}/read/`,token,tenant,'POST',{last_message_id}),
+    tickets:(token:string,tenant:string)=>call<TicketDto[]>('/tickets/',token,tenant),
+    createTicket:(token:string,tenant:string,payload:{category:string;subject:string;details:string;student_id?:string})=>
+      call<TicketDto>('/tickets/',token,tenant,'POST',payload),
+    ticket:(token:string,tenant:string,id:string)=>call<TicketDto>(`/tickets/${id}/`,token,tenant),
+    replyTicket:(token:string,tenant:string,id:string,body:string)=>call<TicketDto>(`/tickets/${id}/reply/`,token,tenant,'POST',{body}),
+    changeTicketStatus:(token:string,tenant:string,id:string,state:TicketState,expected_version:number)=>call<TicketDto>(`/tickets/${id}/transition/`,token,tenant,'POST',{state,expected_version}),
+    inbox:(token:string,tenant:string)=>call<InboxDto[]>('/notifications/',token,tenant),
+    markInboxRead:(token:string,tenant:string,id:string)=>call<{read:boolean}>(`/notifications/${id}/read/`,token,tenant,'POST',{}),
+  };
+}
+
+/** Non-secret retry identifier, retained by the composer until acknowledgement. */
+export function messageKey():string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
+    const r=Math.floor(Math.random()*16);return (c==='x'?r:(r&3)|8).toString(16);
+  });
+}
+export const ticketTransitions:Record<TicketState,TicketState[]>={OPEN:['IN_PROGRESS','RESOLVED'],IN_PROGRESS:['OPEN','RESOLVED'],RESOLVED:['IN_PROGRESS','CLOSED'],CLOSED:[]};
+export const communicationLabels:Record<string,string>={
+  ANNOUNCEMENT_PUBLISHED:'Thông báo mới',MESSAGE_RECEIVED:'Tin nhắn mới',TICKET_REPLY:'Phản hồi hỗ trợ',TICKET_STATUS:'Trạng thái hỗ trợ',
+  UNEXCUSED_ABSENCE:'Vắng không phép',LEAVE_DECIDED:'Kết quả xin nghỉ',GRADE_PUBLISHED:'Điểm đã công bố',GRADE_CORRECTED:'Điểm đã điều chỉnh',HOMEWORK_RETURNED:'Bài tập đã trả',
+  OPEN:'Mới tiếp nhận',IN_PROGRESS:'Đang xử lý',RESOLVED:'Đã giải quyết',CLOSED:'Đã đóng',DRAFT:'Bản nháp',PUBLISHED:'Đã công bố',
+  ACCOUNT:'Tài khoản',ACADEMIC_RECORD:'Hồ sơ học tập',SCHEDULE:'Lịch học',FEES:'Học phí',OTHER:'Khác',SCHOOL:'Toàn trường',GRADE:'Theo khối',CLASS:'Theo lớp'};

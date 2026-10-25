@@ -12,7 +12,7 @@ INSTALLED_APPS = [
     'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes',
     'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles',
     'rest_framework', 'rest_framework_simplejwt', 'corsheaders',
-    'apps.identity', 'apps.schools', 'apps.academics', 'apps.attendance', 'apps.grades', 'apps.homework',
+    'apps.identity', 'apps.schools', 'apps.academics', 'apps.attendance', 'apps.grades', 'apps.homework', 'apps.communications',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,7 +62,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 CORS_ALLOWED_ORIGINS = [x.strip() for x in os.environ.get(
-    'CORS_ALLOWED_ORIGINS','http://localhost:5173,http://localhost:5174,http://localhost:5175,http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:5175').split(',') if x.strip()]
+    'CORS_ALLOWED_ORIGINS','http://localhost:5173,http://localhost:5174,http://localhost:5175,http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:5175,http://localhost:5177,http://127.0.0.1:5177').split(',') if x.strip()]
 LANGUAGE_CODE = 'vi'
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
 USE_I18N = True

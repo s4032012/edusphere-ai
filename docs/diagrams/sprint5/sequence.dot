@@ -1,0 +1,7 @@
+digraph G {
+ graph [fontname="DejaVu Sans",rankdir=TB,bgcolor="white",pad=.3,nodesep=.35,ranksep=.38,label="PARENT → TEACHER | AUTHORIZED MESSAGE FLOW",labelloc=t,fontsize=20,fontcolor="#13304E"];
+ node[shape=box,style="rounded,filled",fillcolor="#F2F6FA",fontname="DejaVu Sans",fontsize=10,color="#B6CDE0",margin=".2,.1"];
+ edge[fontname="DejaVu Sans",fontsize=10,color="#587993"];
+ a [label="1. Parent selects child"]; b[label="2. GET /students/:id/contacts/\nVerified guardian + active teaching assignment"];c[label="3. POST /conversations/\nStudent + guardian + teacher relationship required"];d[label="4. POST /messages/\nText + UUID idempotency key"];e[label="5. Transaction: save message\n+ enqueue notification intent"];f[label="6. Teacher reads scoped conversation\nRecheck relationship on every request"];
+ a->b->c->d->e->f;
+}

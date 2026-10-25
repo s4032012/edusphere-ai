@@ -4,13 +4,14 @@ from apps.attendance.views import (AttendanceSessionList, AttendanceSessionDetai
 from apps.access.sprint1_views import (YearView, SubjectView, StaffView, StudentUpdateView, StudentArchiveView,
  ClassroomDetailView, EnrollmentListView, EnrollmentEndView, AssignmentListView, AssignmentEndView,
  GuardianListView, GuardianAccountView, AuditListView, SchoolDashboardView)
-from django.urls import path
+from django.urls import path, include
 from django.http import JsonResponse
 from rest_framework_simplejwt.views import TokenObtainPairView
 from apps.access.views import MeView, StudentListCreateView, StudentDetailView, ClassroomListCreateView
 from apps.access.views import TeacherAssignmentCreateView, GuardianLinkCreateView, EnrollmentCreateView, GuardianVerifyView
 
 urlpatterns = [
+    path('api/v1/comms/', include('apps.communications.urls')),
     path('api/v1/homework/', HomeworkListCreate.as_view()),
     path('api/v1/homework/<uuid:task_id>/', HomeworkDetail.as_view()),
     path('api/v1/homework/<uuid:task_id>/my-submission/', MySubmission.as_view()),

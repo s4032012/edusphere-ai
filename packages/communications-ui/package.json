@@ -1,0 +1,25 @@
+{
+  "name": "@edusphere/communications-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./web.tsx",
+    "./native": "./native.tsx"
+  },
+  "dependencies": {
+    "@edusphere/api-client": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=19.2.0",
+    "react-native": ">=0.88.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "~19.3.0"
+  }
+}
