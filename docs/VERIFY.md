@@ -1,5 +1,7 @@
 # Kết quả kiểm chứng Sprint 0 — 2026-10-18
 
+**Sprint 5:** Kết quả mới nhất ở [SPRINT5_DELIVERY_MANIFEST.md](SPRINT5_DELIVERY_MANIFEST.md), các bước nghiệm thu ở [SPRINT5_ACCEPTANCE.md](SPRINT5_ACCEPTANCE.md). Các ghi chú Sprint 0 bên dưới được giữ như lịch sử.
+
 Phần nền kỹ thuật đã được triển khai và kiểm thử local với dữ liệu giả lập. Chưa nghiệm thu toàn bộ các gate cần UI/thiết bị, repository remote hoặc phê duyệt của chủ dự án. Không coi kết quả build bundle là chạy thành công trên điện thoại.
 
 > Cập nhật 2026-10-24: cả 3 app đã nâng lên **Expo SDK 58** để khớp Expo Go mới; Expo Doctor 20/20 mỗi app, typecheck và bundle iOS/Android đều đạt. Xem [kết quả hiện tại](SPRINT4_DELIVERY_MANIFEST.md) và [cách khởi động lại](../README.md). Bảng dưới là lịch sử kiểm chứng Sprint 0.

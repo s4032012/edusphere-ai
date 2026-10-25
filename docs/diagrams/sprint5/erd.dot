@@ -1,0 +1,20 @@
+digraph G {
+ graph [fontname="DejaVu Sans",bgcolor="white",rankdir=LR,labelloc=t,label="SPRINT 5 | COMMUNICATION ENTITY RELATIONSHIPS",fontsize=19,fontcolor="#13304E",pad=.35,ranksep=.8,nodesep=.48];
+ node [shape=record,fontname="DejaVu Sans",fontsize=10,style=filled,fillcolor="#F2F7FA",color="#B5CDD7"];
+ edge[color="#7090A2",arrowsize=.6];
+ tenant[label="{Tenant | id PK}"];account[label="{Account | id PK}"];student[label="{Student | id PK}"];
+ notice[label="{Announcement | tenant_id FK | author_id FK | scope / target | state / published_at}"];
+ recipient[label="{AnnouncementRecipient | announcement_id FK | account_id FK}"];
+ read[label="{AnnouncementRead | announcement_id FK | account_id FK}"];
+ thread[label="{Conversation | tenant_id FK | student_id FK | teacher_id FK | guardian_id FK}"];
+ msg[label="{ConversationMessage | conversation_id FK | sender_id FK | client_key unique per sender}"];
+ tkt[label="{SupportTicket | tenant_id FK | requester_id FK | student_id optional | state}"];
+ reply[label="{TicketReply | ticket_id FK | author_id FK}"];
+ out[label="{NotificationOutbox | tenant_id FK | recipient_id FK | dedupe_key unique}"];
+ receipt[label="{NotificationReceipt | event_id FK | recipient_id FK}"];
+ tenant->notice;tenant->thread;tenant->tkt;tenant->out;
+ account->notice;notice->recipient;notice->read;
+ student->thread;account->thread;thread->msg;account->msg;
+ account->tkt;tkt->reply;
+ out->receipt;
+}

@@ -20,3 +20,5 @@ main{min-width:0}.table-scroll{overflow-x:auto}button:disabled{opacity:.55;curso
 @media(max-width:480px){.card{padding:16px}.row>label{width:100%}input,select{min-width:0;max-width:100%;width:100%}h1{font-size:28px}}
 
 .homework-compose>label{display:grid;gap:6px;margin:12px 0}.homework-compose textarea{font:inherit;padding:12px;border:1px solid #C7D1DF;border-radius:10px}.homework-compose .homework-checkbox{display:flex;align-items:center;gap:10px}.homework-checkbox input[type=checkbox]{width:18px;min-width:18px;height:18px;padding:0}.homework-compose legend{font-weight:700;margin-bottom:10px}
+
+.comms label{display:block;margin:12px 0}.comms input,.comms textarea,.comms select{display:block;width:100%;max-width:680px;padding:10px;border:1px solid #cbd5e1;border-radius:8px}.comms textarea{min-height:96px}.comms button{margin:6px 8px 6px 0}.comms section{margin:24px 0}.comms h4{margin-bottom:8px}

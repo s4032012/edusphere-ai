@@ -1,3 +1,4 @@
+import {CommunicationCenter} from '@edusphere/communications-ui/native';
 import {HomeworkManager} from '../components/HomeworkManager';
 import {GradeManager} from '../components/GradeManager';
 import {AttendanceManager} from '../components/AttendanceManager';
@@ -42,7 +43,7 @@ export default function Home(){
     try{await SecureStore.deleteItemAsync(accessKey);}catch{setError('Không thể xóa phiên đã lưu. Vui lòng thử lại.');}}
   if(loading)return <SafeAreaView style={styles.page}><ActivityIndicator color={accent} size="large"/></SafeAreaView>;
   return <SafeAreaView style={styles.page}><ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-    <Text style={styles.kicker}>EDUSPHERE AI · SPRINT 3</Text>
+    <Text style={styles.kicker}>EDUSPHERE AI · SPRINT 5</Text>
     <Text style={styles.title}>EduSphere Teacher</Text>
     <Text style={styles.desc}>Quản lý và học tập thông minh · dữ liệu demo</Text>
     {!user? <View style={styles.card}><Text style={styles.heading}>Đăng nhập</Text>
@@ -59,7 +60,7 @@ export default function Home(){
     </View><View style={styles.card}><Text style={styles.heading}>Danh sách học sinh</Text>
       {students.length===0?<Text style={styles.desc}>Chưa tải dữ liệu hoặc không có học sinh trong phạm vi được cấp quyền.</Text>
         :students.map(s=><View key={s.id} style={styles.student}><Text style={styles.studentName}>{s.full_name}</Text><Text style={styles.small}>{s.student_code}</Text></View>)}
-    </View>{memberships.some(m=>m.tenant_id===tenant&&m.role==='HOMEROOM_TEACHER')&&<AttendanceManager key={token+tenant} token={token} tenant={tenant} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');}}/>}{memberships.some(m=>m.tenant_id===tenant&&m.role==='SUBJECT_TEACHER')&&<GradeManager key={'grades'+token+tenant} token={token} tenant={tenant} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/>}<HomeworkManager key={'homework'+token+tenant} token={token} tenant={tenant} canCreate={memberships.some(m=>m.tenant_id===tenant&&['SUBJECT_TEACHER','DEPARTMENT_HEAD'].includes(m.role))} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/></>}
+    </View>{memberships.some(m=>m.tenant_id===tenant&&m.role==='HOMEROOM_TEACHER')&&<AttendanceManager key={token+tenant} token={token} tenant={tenant} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');}}/>}{memberships.some(m=>m.tenant_id===tenant&&m.role==='SUBJECT_TEACHER')&&<GradeManager key={'grades'+token+tenant} token={token} tenant={tenant} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/>}<CommunicationCenter key={'comms'+token+tenant} baseUrl={API_URL} token={token} tenant={tenant} userId={user.id} mode="teacher" canAnnounce={memberships.some(m=>m.tenant_id===tenant&&m.role==='HOMEROOM_TEACHER')} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/><HomeworkManager key={'homework'+token+tenant} token={token} tenant={tenant} canCreate={memberships.some(m=>m.tenant_id===tenant&&['SUBJECT_TEACHER','DEPARTMENT_HEAD'].includes(m.role))} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/></>}
     {working?<ActivityIndicator accessibilityLabel="Đang tải" color={accent}/>:null}
     {error?<Text accessibilityRole="alert" style={styles.error}>{error}</Text>:null}
     <Text style={styles.footer}>PROTOTYPE • Dữ liệu demo. Chưa có refresh token, gửi push hoặc AI.</Text>
