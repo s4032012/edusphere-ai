@@ -1,0 +1,13 @@
+digraph Policy {
+ graph [rankdir=TB, fontname="DejaVu Sans",bgcolor="white",pad=.4, nodesep=.4,ranksep=.45, label="SPRINT 6 | Least-privilege authorization flow",labelloc=t, fontsize=18, fontcolor="#173654"];
+ node [shape=box,style="rounded,filled",fontname="DejaVu Sans",fontsize=10,color="#C6D5DF",fillcolor="#F5F8FB",fontcolor="#203447",margin=".19,.13"];
+ edge [fontname="DejaVu Sans",fontsize=9,color="#5B7B90"];
+ auth [label="Valid JWT + X-Tenant-ID"];
+ member [label="Active tenant membership?"];
+ role [label="Parent or Student role?"];
+ relation [label="Verified, active guardian link\nor self student account?"];
+ policy [label="Tenant + object scoped query\nCurrent enrollment\nReleased information only",fillcolor="#E8F4F1"];
+ denied [label="Deny: 403 or 404",fillcolor="#FBEAEA"];
+ output [label="Return minimal read-only response",fillcolor="#DFEEF9"];
+ auth -> member; member -> role [label="yes"];member -> denied [label="no"];role -> relation [label="yes"];role -> denied [label="no"];relation -> policy [label="yes"];relation -> denied [label="no"];policy -> output;
+}

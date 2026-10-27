@@ -1,0 +1,12 @@
+digraph Gate {
+ graph [rankdir=LR, fontname="DejaVu Sans",bgcolor="white",pad=.45,ranksep=.6, nodesep=.55,label="SPRINT 6 | AI readiness does not equal AI deployment",labelloc=t,fontsize=18,fontcolor="#173654"];
+ node [shape=box,style="rounded,filled",fontname="DejaVu Sans",fontsize=11,color="#C6D5DF",fillcolor="#F5F8FB",fontcolor="#203447",margin=".21,.14"];
+ safe [label="Authorized student snapshot\nPublished / submitted facts",fillcolor="#E9F3FB"];
+ rules [label="Deterministic rules\nEvidence + source labels",fillcolor="#E9F4EC"];
+ preview [label="Read-only preview\nHuman review",fillcolor="#E9F4EC"];
+ future [label="FUTURE ONLY\nConsent + provider DPA\nSafety eval + audit + limits",style="rounded,dashed,filled",fillcolor="#F9F1DC"];
+ llm [label="Future AI model gateway\nNOT CONNECTED",style="rounded,dashed,filled",fillcolor="#FBEAEA"];
+ safe -> rules -> preview;
+ preview -> future [style=dashed,label="not enabled"];
+ future -> llm [style=dashed];
+}

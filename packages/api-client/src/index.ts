@@ -242,3 +242,35 @@ export const communicationLabels:Record<string,string>={
   UNEXCUSED_ABSENCE:'Vắng không phép',LEAVE_DECIDED:'Kết quả xin nghỉ',GRADE_PUBLISHED:'Điểm đã công bố',GRADE_CORRECTED:'Điểm đã điều chỉnh',HOMEWORK_RETURNED:'Bài tập đã trả',
   OPEN:'Mới tiếp nhận',IN_PROGRESS:'Đang xử lý',RESOLVED:'Đã giải quyết',CLOSED:'Đã đóng',DRAFT:'Bản nháp',PUBLISHED:'Đã công bố',
   ACCOUNT:'Tài khoản',ACADEMIC_RECORD:'Hồ sơ học tập',SCHEDULE:'Lịch học',FEES:'Học phí',OTHER:'Khác',SCHOOL:'Toàn trường',GRADE:'Theo khối',CLASS:'Theo lớp'};
+
+/** Sprint 6: only server-authorized, released educational information. */
+export type DashboardChild = {id:string;full_name:string;student_code:string};
+export type AttendanceDigest = {window_days:number;from_date:string;through_date:string;recorded_days:number;PRESENT:number;ABSENT:number;LATE:number};
+export type DashboardGrade = {assessment_id:string;subject:string;title:string;semester:string;kind:'TX'|'GK'|'CK';
+  score:string|null;result:string|null;note:string;published_at:string|null};
+export type DashboardHomework = {id:string;title:string;subject:string;due_at:string;
+  status:'NOT_SUBMITTED'|'OVERDUE'|'IN_PROGRESS'|'SUBMITTED'|'RETURNED';feedback_available:boolean;assignment_state:'PUBLISHED'|'CLOSED';actionable:boolean;allow_late:boolean};
+export type DashboardNotice = {id:string;title:string;scope:'SCHOOL'|'GRADE'|'CLASS';published_at:string|null;read:boolean};
+export type DashboardEvent = {id:string;event_type:string;created_at:string;read:boolean};
+export type StudentDashboardSnapshot = {
+  student:{id:string;full_name:string;student_code:string;classroom:{id:string;code:string;grade_level:number}|null};
+  as_of:string;enrollment_status:'CURRENT'|'NONE'|'AMBIGUOUS';attendance:AttendanceDigest;
+  grades:{items:DashboardGrade[];limited_to:number;released_only:true};
+  homework:{summary:{total:number;submitted_or_returned:number;overdue:number;pending_action:number};items:DashboardHomework[];limited_to:number};
+  announcements:DashboardNotice[];notifications:{scope:'ACCOUNT';items:DashboardEvent[]};data_limits:string[];
+};
+export type AiPreview = {student_id:string;as_of:string;enabled:false;mode:'RULE_BASED_PREVIEW';model_called:false;
+  exported_to_provider:false;human_review_required:true;enrollment_status:'CURRENT'|'NONE'|'AMBIGUOUS';
+  sentences:{kind:string;text:string;source:string}[];limitations:string[]};
+export function createDashboardApi(baseUrl:string){
+  const base=trimBase(baseUrl);
+  const get=<T,>(path:string,token:string,tenantId:string)=>jsonFetch<T>(`${base}${path}`,{method:'GET',
+    headers:{'Authorization':`Bearer ${token}`,'X-Tenant-ID':tenantId}});
+  return {
+    children:(token:string,tenant:string)=>get<{students:DashboardChild[]}>('/api/v1/dashboard/children/',token,tenant),
+    student:(token:string,tenant:string,studentId:string)=>get<StudentDashboardSnapshot>(
+      `/api/v1/dashboard/students/${encodeURIComponent(studentId)}/`,token,tenant),
+    aiPreview:(token:string,tenant:string,studentId:string)=>get<AiPreview>(
+      `/api/v1/dashboard/students/${encodeURIComponent(studentId)}/ai-preview/`,token,tenant),
+  };
+}

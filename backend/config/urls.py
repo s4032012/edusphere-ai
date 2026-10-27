@@ -11,6 +11,7 @@ from apps.access.views import MeView, StudentListCreateView, StudentDetailView, 
 from apps.access.views import TeacherAssignmentCreateView, GuardianLinkCreateView, EnrollmentCreateView, GuardianVerifyView
 
 urlpatterns = [
+    path('api/v1/dashboard/', include('apps.dashboard.urls')),
     path('api/v1/comms/', include('apps.communications.urls')),
     path('api/v1/homework/', HomeworkListCreate.as_view()),
     path('api/v1/homework/<uuid:task_id>/', HomeworkDetail.as_view()),
