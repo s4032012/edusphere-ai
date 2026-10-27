@@ -1,4 +1,9 @@
-# EduSphere AI · Sprint 5 — Communication & Notification
+# EduSphere AI · Sprint 6 — Parent & Student Dashboard
+
+**Sprint 6 đã tích hợp:** Parent/Student Mobile có dashboard tự tải theo học sinh, chuyên cần 30 ngày, điểm đã công bố, bài tập ưu tiên và thông báo. Parent xem tóm tắt **theo quy tắc, chưa sử dụng AI**, có nguồn cho từng câu. Xem [hướng dẫn/API](docs/SPRINT6_IMPLEMENTATION.md), [kết quả kiểm chứng](docs/SPRINT6_DELIVERY_MANIFEST.md) và [nghiệm thu thiết bị](docs/SPRINT6_ACCEPTANCE.md).
+
+Chạy lại Metro: `pnpm dev:parent --clear` và `pnpm dev:student --clear` ở hai terminal. Giữ Expo Go SDK 58 và `.env` API LAN. Không cần reset/seed DB; Sprint 6 không thêm bảng. Đăng nhập `parent_a` / `student_a` để xem dashboard ngay dưới phần tài khoản. Dữ liệu thiếu sẽ được ghi rõ, không suy ra điểm/chuyên cần.
+
 
 **Sprint 5 đã tích hợp:** Thông báo trường/khối/lớp, hội thoại giáo viên–phụ huynh, phiếu hỗ trợ và hộp thông báo đã đọc/chưa đọc. Có Support Desk mới tại **http://127.0.0.1:5177**. Xem [hướng dẫn Sprint 5](docs/SPRINT5_IMPLEMENTATION.md), [kết quả kiểm chứng](docs/SPRINT5_DELIVERY_MANIFEST.md) và [kịch bản nghiệm thu](docs/SPRINT5_ACCEPTANCE.md).
 

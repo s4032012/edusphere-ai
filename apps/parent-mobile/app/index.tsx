@@ -1,3 +1,4 @@
+import {LearningDashboard} from '../components/LearningDashboard';
 import {CommunicationCenter} from '@edusphere/communications-ui/native';
 import {HomeworkParent} from '../components/HomeworkParent';
 import {GradeViewer} from '../components/GradeViewer';
@@ -5,9 +6,10 @@ import {LeaveAndAttendance} from '../components/LeaveAndAttendance';
 import {useEffect,useState,useRef} from 'react';
 import {ActivityIndicator,Pressable,SafeAreaView,ScrollView,StyleSheet,Text,TextInput,View} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import {ApiError,createRequestScope,createApi,membershipsFor,ROLES,type CurrentUser,type Student} from '@edusphere/api-client';
+import {ApiError,createRequestScope,createApi,createDashboardApi,membershipsFor,ROLES,type CurrentUser,type Student} from '@edusphere/api-client';
 const API_URL=process.env.EXPO_PUBLIC_API_URL || 'http://127.0.0.1:8000';
 const api=createApi(API_URL);
+const dashboardApi=createDashboardApi(API_URL);
 const accessKey='edusphere.parent.access';
 const allowed=ROLES.parent;
 const accent='#117C63';
@@ -37,14 +39,14 @@ export default function Home(){
     setToken(pair.access);setUser(me);setTenant(scoped[0].tenant_id);setPassword('');
   }catch(e){setError(e instanceof Error?e.message:'Đăng nhập thất bại');}finally{setWorking(false);}}
   async function loadStudents(){const current=scope.current.capture();setWorking(true);setError('');setStudents([]);
-    try{const rows=await api.students(token,tenant);if(current())setStudents(rows);}
+    try{const {students:rows}=await dashboardApi.children(token,tenant);if(current())setStudents(rows);}
     catch(e){if(current()){if(e instanceof ApiError&&e.status===401)await signOut();setError(e instanceof ApiError&&e.status===401?'Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.':e instanceof Error?e.message:'Không thể tải danh sách');}}
     finally{if(current())setWorking(false);}}
   async function signOut(){scope.current.invalidate();setWorking(false);setToken('');setUser(null);setTenant('');setStudents([]);setPassword('');
     try{await SecureStore.deleteItemAsync(accessKey);}catch{setError('Không thể xóa phiên đã lưu. Vui lòng thử lại.');}}
   if(loading)return <SafeAreaView style={styles.page}><ActivityIndicator color={accent} size="large"/></SafeAreaView>;
   return <SafeAreaView style={styles.page}><ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-    <Text style={styles.kicker}>EDUSPHERE AI · SPRINT 5</Text>
+    <Text style={styles.kicker}>EDUSPHERE AI · SPRINT 6</Text>
     <Text style={styles.title}>EduSphere Parent</Text>
     <Text style={styles.desc}>Quản lý và học tập thông minh · dữ liệu demo</Text>
     {!user? <View style={styles.card}><Text style={styles.heading}>Đăng nhập</Text>
@@ -58,7 +60,7 @@ export default function Home(){
         <Text style={styles.tenantText}>{m.tenant} · {m.role}</Text></Pressable>)}
       <Pressable accessibilityRole="button" disabled={working} onPress={loadStudents} style={styles.button}><Text style={styles.buttonText}>Xem học sinh được phép</Text></Pressable>
       <Pressable accessibilityRole="button" onPress={signOut} style={styles.outline}><Text style={styles.outlineText}>Đăng xuất</Text></Pressable>
-    </View><View style={styles.card}><Text style={styles.heading}>Danh sách học sinh</Text>
+    </View><LearningDashboard key={'dashboard'+token+tenant} token={token} tenant={tenant} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/><View style={styles.card}><Text style={styles.heading}>Danh sách học sinh</Text>
       {students.length===0?<Text style={styles.desc}>Chưa tải dữ liệu hoặc không có học sinh trong phạm vi được cấp quyền.</Text>
         :students.map(s=><View key={s.id} style={styles.student}><Text style={styles.studentName}>{s.full_name}</Text><Text style={styles.small}>{s.student_code}</Text></View>)}
     </View><LeaveAndAttendance key={token+tenant} token={token} tenant={tenant} students={students} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.');}}/><GradeViewer key={'grades'+token+tenant} token={token} tenant={tenant} students={students} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/><CommunicationCenter key={'comms'+token+tenant} baseUrl={API_URL} token={token} tenant={tenant} userId={user.id} mode="parent" onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/><HomeworkParent key={'homework'+token+tenant} token={token} tenant={tenant} students={students} onExpired={()=>{void signOut();setError('Phiên đăng nhập hết hạn.');}}/></>}

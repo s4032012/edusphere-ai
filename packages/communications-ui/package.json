@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./web.tsx",
-    "./native": "./native.tsx"
+    "./native": "./native.tsx",
+    "./dashboard": "./dashboard.tsx"
   },
   "dependencies": {
     "@edusphere/api-client": "workspace:*"

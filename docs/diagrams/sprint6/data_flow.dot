@@ -1,0 +1,12 @@
+digraph EduSphere {
+ graph [rankdir=LR, fontname="DejaVu Sans", bgcolor="white", pad=.35, nodesep=.5, ranksep=.65, label="SPRINT 6 | Parent & Student dashboard read model", labelloc=t, fontsize=18, fontcolor="#173654"];
+ node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, color="#D5E3EE", fillcolor="#F3F7FA", fontcolor="#26364B", margin="0.22,0.13"];
+ edge [color="#7693A9", arrowsize=.7];
+ parent [label="EduSphere Parent\nReact Native + Expo",fillcolor="#E3F4EF"];
+ student [label="EduSphere Student\nReact Native + Expo",fillcolor="#EDE7FA"];
+ api [label="Django REST\nDashboard API\nJWT + Tenant + Relationship",fillcolor="#DAE9FB"];
+ read [label="Read-model service\nOnly published / submitted",fillcolor="#E6F2FC"];
+ db [label="PostgreSQL sources\nEnrollment + Grades\nAttendance + Homework\nAnnouncements + Outbox",fillcolor="#FAF3DF"];
+ preview [label="Rule-based evidence preview\nLLM disabled",fillcolor="#F0F7E4"];
+ parent -> api;student -> api;api -> read;read -> db [dir=both];read -> preview;
+}

@@ -1,5 +1,7 @@
 # Kết quả kiểm chứng Sprint 0 — 2026-10-18
 
+**Sprint 6:** Kết quả hiện tại ở [SPRINT6_DELIVERY_MANIFEST.md](SPRINT6_DELIVERY_MANIFEST.md); cần chạy [nghiệm thu thiết bị](SPRINT6_ACCEPTANCE.md).
+
 **Sprint 5:** Kết quả mới nhất ở [SPRINT5_DELIVERY_MANIFEST.md](SPRINT5_DELIVERY_MANIFEST.md), các bước nghiệm thu ở [SPRINT5_ACCEPTANCE.md](SPRINT5_ACCEPTANCE.md). Các ghi chú Sprint 0 bên dưới được giữ như lịch sử.
 
 Phần nền kỹ thuật đã được triển khai và kiểm thử local với dữ liệu giả lập. Chưa nghiệm thu toàn bộ các gate cần UI/thiết bị, repository remote hoặc phê duyệt của chủ dự án. Không coi kết quả build bundle là chạy thành công trên điện thoại.
