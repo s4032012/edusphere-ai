@@ -38,7 +38,8 @@ export function AttendanceManager({token,tenant,onExpired}:{token:string;tenant:
       <Pressable disabled={working} onPress={refreshLeaves}><Text style={s.outlineText}>Tải lại</Text></Pressable></View>
     {leaves.filter(l=>l.state==='PENDING').map(l=><View key={l.id} style={s.row}><Text style={s.name}>{l.student_name||l.student_id}</Text><Text>{l.from_date} → {l.through_date}</Text><Text style={s.sub}>{l.reason}</Text>
       <View style={s.options}><Pressable disabled={working} style={s.choice} onPress={()=>decide(l.id,'approve')}><Text>Duyệt</Text></Pressable><Pressable disabled={working} style={s.choice} onPress={()=>decide(l.id,'reject')}><Text>Từ chối</Text></Pressable></View></View>)}
-    {working&&<ActivityIndicator color={palette.green}/>} {!!message&&<Text accessibilityRole="alert" style={s.feedback}>{message}</Text>}
+    {working&&<ActivityIndicator color={palette.green}/>}
+    {!!message&&<Text accessibilityRole="alert" style={s.feedback}>{message}</Text>}
   </View>;
 }
 const s=StyleSheet.create({panel:{paddingTop:12},title:{fontSize:18,fontWeight:'800',color:palette.dark,marginTop:10},sub:{color:'#637089',marginTop:4,fontSize:13},
