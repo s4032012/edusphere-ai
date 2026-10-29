@@ -5,7 +5,7 @@ from apps.access.sprint1_views import (YearView, SubjectView, StaffView, Student
  ClassroomDetailView, EnrollmentListView, EnrollmentEndView, AssignmentListView, AssignmentEndView,
  GuardianListView, GuardianAccountView, AuditListView, SchoolDashboardView)
 from django.urls import path, include
-from django.http import JsonResponse
+from config.health import healthz, readyz
 from rest_framework_simplejwt.views import TokenObtainPairView
 from apps.access.views import MeView, StudentListCreateView, StudentDetailView, ClassroomListCreateView
 from apps.access.views import TeacherAssignmentCreateView, GuardianLinkCreateView, EnrollmentCreateView, GuardianVerifyView
@@ -54,7 +54,8 @@ urlpatterns = [
     path('api/v1/guardian-accounts/', GuardianAccountView.as_view()),
     path('api/v1/guardian-links/list/', GuardianListView.as_view()),
     path('api/v1/audit-events/', AuditListView.as_view()),
-    path('healthz/', lambda request: JsonResponse({'status': 'ok', 'service': 'edusphere-api'})),
+    path('healthz/', healthz),
+    path('readyz/', readyz),
     path('api/v1/auth/token/', TokenObtainPairView.as_view(), name='token'),
     path('api/v1/me/', MeView.as_view(), name='me'),
     path('api/v1/classrooms/', ClassroomListCreateView.as_view(), name='classrooms'),

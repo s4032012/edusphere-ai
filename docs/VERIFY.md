@@ -65,3 +65,8 @@ python3 scripts/smoke_api.py
 ```
 
 Bộ smoke HTTP yêu cầu dataset seed nguyên bản và API local; không dùng để xác nhận database đã thêm dữ liệu nghiệp vụ. Tránh chạy liên tiếp quá nhanh vì login có anonymous rate limit.
+
+
+## Sprint 7
+
+Kiểm chứng ổn định và tích hợp: [manifest](SPRINT7_DELIVERY_MANIFEST.md), [ma trận](SPRINT7_TEST_MATRIX.md), [nghiệm thu](SPRINT7_ACCEPTANCE.md). Chạy `bash scripts/verify_sprint7.sh --full`; pilot gate riêng yêu cầu hồ sơ thủ công đúng commit. Không chuyển kết quả CI thành nghiệm thu thiết bị/trường.

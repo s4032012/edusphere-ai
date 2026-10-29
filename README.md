@@ -1,4 +1,8 @@
-# EduSphere AI · Sprint 6 — Parent & Student Dashboard
+# EduSphere AI · Sprint 7 — Stabilization & Integration
+
+**Sprint 7:** health/readiness riêng, kiểm thử xuyên module và quyền truy cập, gate PostgreSQL/web/mobile, HTTP smoke và diễn tập backup–restore bằng database synthetic riêng. Chạy `bash scripts/verify_sprint7.sh --full` khi Docker stack đang chạy. Xem [triển khai](docs/SPRINT7_IMPLEMENTATION.md), [kết quả kiểm chứng](docs/SPRINT7_DELIVERY_MANIFEST.md), [nghiệm thu](docs/SPRINT7_ACCEPTANCE.md) và [runbook](docs/SPRINT7_OPERATIONS.md). Chưa chốt GO pilot khi thiếu nghiệm thu thiết bị, vận hành, privacy và school UAT.
+
+Sprint 7 không thêm migrations; không cần reset/seed DB. Dùng Node >=22.13 (`nvm use` nếu có nvm), chạy `pnpm install --frozen-lockfile` từ thư mục gốc để nhận các bản vá SDK 58, rồi khởi động lại 3 Metro bằng `--clear`. `curl http://127.0.0.1:8000/readyz/` kiểm tra kết nối database; `/healthz/` chỉ kiểm tra process.
 
 **Sprint 6 đã tích hợp:** Parent/Student Mobile có dashboard tự tải theo học sinh, chuyên cần 30 ngày, điểm đã công bố, bài tập ưu tiên và thông báo. Parent xem tóm tắt **theo quy tắc, chưa sử dụng AI**, có nguồn cho từng câu. Xem [hướng dẫn/API](docs/SPRINT6_IMPLEMENTATION.md), [kết quả kiểm chứng](docs/SPRINT6_DELIVERY_MANIFEST.md) và [nghiệm thu thiết bị](docs/SPRINT6_ACCEPTANCE.md).
 
@@ -75,7 +79,7 @@ pnpm dev:student
   `!override` yêu cầu Docker Compose 2.24.4+. Cảnh báo: HTTP + demo JWT không an toàn trên mạng không tin cậy.
   Tốt hơn dùng HTTPS tunnel riêng/đường kết nối bảo mật trước khi thử với người dùng ngoài nhóm dev.
 
-**Expo SDK baseline: SDK 58** cho cả Teacher, Parent và Student, tương thích Expo Go SDK 58. Dependency native đã đồng bộ theo Expo (React Native 0.88.0 / React 19.3.0).
+**Expo SDK baseline: SDK 58** cho cả Teacher, Parent và Student, tương thích Expo Go SDK 58. Dependency native đã đồng bộ theo Expo (React Native 0.88.1 / React 19.3.0).
 
 Sau nâng SDK, dừng Metro cũ bằng `Ctrl+C` ở từng terminal, rồi chạy từng lệnh trong terminal riêng:
 
